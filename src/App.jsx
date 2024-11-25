@@ -39,13 +39,9 @@ function App() {
     }
   }, [count, showSidebar]);
 
-  useEffect(() => {
-    console.log(`showSidebar is ${showSidebar}`);
-  }, [showSidebar]);
-
   return (
     <>
-      <div className="absolute top-10 right-10 flex gap-2">
+      <div className="absolute top-10 right-10 flex gap-2 transition-all duration-1000">
         <Button
           onClick={() => setDarkMode((previous) => !previous)}
           className="cursor-pointer px-4 py-2 rounded bg-black/10 dark:bg-white/10 p-1 ring-1 ring-black/15 dark:ring-white/15 ring-inset"
@@ -55,9 +51,9 @@ function App() {
         </Button>
       </div>
 
-      <div className="bg-stone-300 dark:bg-stone-900 py-10 h-dvh w-vw flex gap-2 items-center justify-center">
-        {<SidebarView width={showSidebar} />}
-        <div className="w-[50vw] border-2 flex flex-col gap-5 items-center">
+      <div className="bg-stone-300 dark:bg-stone-900 py-10 h-dvh w-vw flex gap-2 items-center justify-center transition-all duration-1000">
+        {showSidebar && <SidebarView />}
+        <div className="w-[50vw] flex flex-col gap-5 items-center">
           <div className="w-full max-w-96">
             <Suspense
               fallback={
