@@ -1,15 +1,16 @@
-// import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   Menu,
   MenuButton,
   MenuItem,
   MenuItems,
+  Input,
 } from "@headlessui/react";
 import {
   ArrowLeftCircleIcon,
   ArrowRightCircleIcon,
+  CheckCircleIcon,
   ChevronDownIcon,
 } from "@heroicons/react/16/solid";
 
@@ -19,11 +20,36 @@ import SongTile from "./SongTile";
 export default function JSONReader() {
   const [loadLimit, setLoadLimit] = useState(25);
   const [currentPage, setCurrentPage] = useState(1);
+  const [timeFilter, setTimeFilter] = useState(10000);
+  const [filters, setFilters] = useState([timeFilter]);
+
+  const [totalItemsToDisplay, SetTotalItemsToDisplay] = useState([]);
+  const [currentItems, setCurrentItems] = useState([]);
 
   const startItem = (currentPage - 1) * loadLimit;
-  const currentItems = json.slice(startItem, startItem + loadLimit);
-  const totalPages = Math.ceil(json.length / loadLimit);
+  const totalPages = Math.ceil(totalItemsToDisplay.length / loadLimit);
 
+  // filters
+  const toggleTimeFilter = () => {
+    switch (timeFilter) {
+      case 10000:
+        setTimeFilter(20000);
+        break;
+      case 20000:
+        setTimeFilter(30000);
+        break;
+      case 30000:
+        setTimeFilter(0);
+        break;
+      case 0:
+        setTimeFilter(10000);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // page navigation functions
   const previousPage = () => {
     if (currentPage != 1) {
       setCurrentPage(currentPage - 1);
@@ -34,12 +60,91 @@ export default function JSONReader() {
       setCurrentPage(currentPage + 1);
     }
   };
+  const updatePage = (target) => {
+    if (target > 0 && target < totalPages) {
+      setCurrentPage(target);
+    }
+  };
+
+  // useEffect to update the total list of items to display through ALL pages
+  // changes when timeFilter (or any other filters) change
+  useEffect(() => {
+    const totalFilteredItems = json.filter(
+      (item) => item.ms_played >= timeFilter
+    );
+    SetTotalItemsToDisplay(totalFilteredItems);
+  }, [timeFilter]);
+
+  // useEffect to refresh the current list of items loaded on the CURRENT page
+  // changes when startItem, loadLimit (where in the list user is positioned) or totalItemsToDisplay (total list contents) change
+  useEffect(() => {
+    const updatedItems = totalItemsToDisplay.slice(
+      startItem,
+      startItem + loadLimit
+    );
+    setCurrentItems(updatedItems);
+  }, [totalItemsToDisplay, startItem, loadLimit]);
+
+  const mapJSON = () => {
+    return currentItems.map((item, index) => {
+      if (item.ms_played > 20000) {
+        return <SongTile key={index} item={item}></SongTile>;
+      } else {
+        return null;
+      }
+    });
+  };
 
   return (
     <>
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-2xl font-bold">June 2024</h2>
         <div className="flex gap-5">
+          <div className="flex gap-3 items-center text-right text-sm">
+            <h4>Filters</h4>
+            <Menu>
+              <MenuButton className="inline-flex items-center gap-2 rounded bg-stone-900/20  py-1 px-2 focus:outline-none data-[hover]:bg-stone-900/30 data-[open]:bg-stone-900/30 data-[focus]:outline-1 data-[focus]:outline-white">
+                {filters.length}
+                <ChevronDownIcon className="size-4 fill-white/60" />
+              </MenuButton>
+              <MenuItems
+                transition
+                anchor="bottom end"
+                className="w-64 text-sm origin-top-right rounded border border-white/5 bg-stone-300/90 dark:bg-stone-900/90 dark:text-stone-300 text-stone-800 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+              >
+                <MenuItem>
+                  <button
+                    onClick={() => toggleTimeFilter()}
+                    className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
+                  >
+                    <CheckCircleIcon className="size-6" />
+                    <p>
+                      {timeFilter != 0
+                        ? `Not displaying songs that were played for ${timeFilter / 1000} seconds or less.`
+                        : `Currently displaying songs played for any duration.`}
+                    </p>
+                    {/* // ! when switching time filter, it doesnt update the page to give the total load limit, e.g. if there are 15 songs on the page when the time filter is removing 10 seconds or less, when I update it to remove 20 seconds or less - there will be less than 15 songs on the page - the next page wont fill up */}
+                  </button>
+                </MenuItem>
+                <MenuItem>
+                  <button
+                    onClick={(e) => setLoadLimit(e.target.textContent)}
+                    className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
+                  >
+                    25
+                  </button>
+                </MenuItem>
+                <MenuItem>
+                  <button
+                    onClick={(e) => setLoadLimit(e.target.textContent)}
+                    className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
+                  >
+                    35
+                  </button>
+                </MenuItem>
+              </MenuItems>
+            </Menu>
+          </div>
           <div className="flex gap-3 items-center text-right text-sm">
             <h4>Show</h4>
             <Menu>
@@ -50,7 +155,7 @@ export default function JSONReader() {
               <MenuItems
                 transition
                 anchor="bottom end"
-                className="w-16 text-sm origin-top-right rounded border border-white/5 bg-white/5 dark:text-stone-300 text-stone-800 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+                className="w-16 text-sm origin-top-right rounded border border-white/5 bg-stone-300/90 dark:bg-stone-900/90 dark:text-stone-300 text-stone-800 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
               >
                 <MenuItem>
                   <button
@@ -85,6 +190,7 @@ export default function JSONReader() {
                 className={`size-5 ${currentPage == 1 ? "text-stone-400 dark:text-stone-700" : ""}`}
               />
             </Button>
+            <Input onChange={(e) => updatePage(e.target.value)}></Input>
             <p>
               {currentPage} / {totalPages}
             </p>
@@ -98,9 +204,7 @@ export default function JSONReader() {
       </div>
 
       <div className="overflow-y-auto no_scrollbar flex flex-col gap-2 text-xs rounded-t rounded-ee-2xl">
-        {currentItems.map((item, index) => (
-          <SongTile key={index} item={item}></SongTile>
-        ))}
+        {mapJSON()}
       </div>
     </>
   );

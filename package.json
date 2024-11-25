@@ -1,7 +1,7 @@
 {
   "name": "spotify_data_reader",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
+    "flowbite": "^2.5.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-image": "^4.1.0",
