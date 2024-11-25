@@ -1,25 +1,19 @@
-import { useEffect, useState, Suspense } from "react";
-import { Button } from "@headlessui/react";
-import {
-  MoonIcon,
-  SunIcon,
-  ArrowLeftCircleIcon,
-  ArrowRightCircleIcon,
-} from "@heroicons/react/16/solid";
-import { useImage } from "react-image";
+import { useEffect, useState } from "react";
 
 import "./App.css";
 import SidebarView from "./components/SidebarView";
+import MainMenu from "./components/MainMenu";
+import DarkModeToggle from "./components/DarkModeToggle";
 
 const jsonFiles = import.meta.glob("./data/*.json");
 
-//! the index fetch from local storage is brocken </3
+// TODO: error handle if the local storage saved values are out of range (e.g. index referring to a JSON that doesn't exist in the array)
 
 function App() {
+  // retrieve values from local storage, with a fallback value if not set
   const getLocalStorageValue = (key, defaultValue) => {
     try {
       const localStorageValue = localStorage.getItem(key);
-      console.log(localStorageValue);
       if (!localStorageValue) {
         return defaultValue;
       } else {
@@ -31,33 +25,23 @@ function App() {
     }
   };
 
+  // states
   const [index, setIndex] = useState(getLocalStorageValue("index", 0));
-  const [darkMode, setDarkMode] = useState(true);
   const [jsonFileArray, setJsonFileArray] = useState([]);
   const [selectedJSON, setSelectedJSON] = useState(null);
+  const [darkMode, setDarkMode] = useState(
+    getLocalStorageValue("darkMode", true)
+  );
 
+  // persist values to local storage
   useEffect(() => {
-    if (darkMode) {
-      document.querySelector("html").classList.add("dark");
-      // console.log("dark mode");
-    } else {
-      document.querySelector("html").classList.remove("dark");
-      // console.log("light mode");
-    }
+    localStorage.setItem("index", JSON.stringify(index));
+  }, [index]);
+  useEffect(() => {
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
   }, [darkMode]);
 
-  const FullSpotifyLogo = ({ darkMode }) => {
-    const imageSource = darkMode
-      ? "../Full_Logo_Green_RGB.svg"
-      : "../Full_Logo_Black_RGB.svg";
-    const { src } = useImage({
-      srcList: [imageSource],
-    });
-
-    return <img alt="Spotify Logo" src={src} />;
-  };
-
-  // load jsonFileArray on component render
+  // load jsonFileArray on component first render
   useEffect(() => {
     const loadFiles = async () => {
       const jsonList = [];
@@ -69,12 +53,6 @@ function App() {
     };
     loadFiles();
   }, []);
-
-  useEffect(() => {
-    if (index > jsonFileArray.length) {
-      setIndex(0);
-    }
-  }, [jsonFileArray.length, index]);
 
   // once jsonFileArray is not empty, choose a JSON to load by default
   // modules: https://vite.dev/guide/features#glob-import
@@ -100,13 +78,6 @@ function App() {
     }
   };
 
-  // persist index to local storage
-  useEffect(() => {
-    if (index !== 0 && jsonFileArray.length > 0) {
-      localStorage.setItem("index", JSON.stringify(index));
-    }
-  }, [index]);
-
   const getJSONDateRange = () => {
     if (!selectedJSON || selectedJSON.length === 0) {
       return "Loading...";
@@ -122,17 +93,7 @@ function App() {
 
   return (
     <>
-      {/* dark/light mode toggle */}
-      <div className="absolute top-10 right-10 flex gap-2 default">
-        <Button
-          onClick={() => setDarkMode((previous) => !previous)}
-          className="cursor-pointer px-4 py-2 rounded bg-black/10 dark:bg-white/10 p-1 ring-1 ring-black/15 dark:ring-white/15 ring-inset"
-        >
-          <MoonIcon className="size-4 fill-black dark:fill-white hidden dark:block" />
-          <SunIcon className="size-4 fill-black dark:fill-white block dark:hidden" />
-        </Button>
-      </div>
-
+      <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
       <div className="bg-stone-300 dark:bg-stone-900 py-10 h-dvh w-vw flex gap-2 items-center justify-center transition-all duration-1000">
         {selectedJSON && (
           <SidebarView
@@ -140,52 +101,13 @@ function App() {
             dateRange={getJSONDateRange()}
           />
         )}
-        <div className="w-[50vw] flex flex-col gap-5 items-center me-5 ">
-          <div className="w-full max-w-96">
-            <Suspense
-              fallback={
-                <h2 className="text-stone-600 font-extrabold">Loading...</h2>
-              }
-            >
-              <FullSpotifyLogo darkMode={darkMode} />
-            </Suspense>
-          </div>
-          <h1 className="text-3xl font-bold select-none">
-            Spotify JSON Reader
-          </h1>
-          <div className="default p-5 flex flex-col gap-3 items-center">
-            <div className="flex gap-3 items-center">
-              <Button
-                className="bg-stone-900/10 dark:bg-stone-300/10 size-12 flex items-center justify-center rounded-full text-stone-800 dark:text-stone-300 text-lg hover:bg-stone-900/40 dark:hover:bg-stone-300/40 group duration-150 transition-all"
-                onClick={() => switchJSON("-")}
-              >
-                <ArrowLeftCircleIcon className="size-7 group-hover:size-9 duration-150 transition-all" />{" "}
-              </Button>
-              <div className="flex flex-col gap-2 items-center">
-                <h2 className="bg-stone-900/10 dark:bg-stone-300/10 px-5 py-1 text-sm rounded text-stone-800 dark:text-stone-300">
-                  {index + 1} /{" "}
-                  {jsonFileArray.length === 0
-                    ? "Loading..."
-                    : jsonFileArray.length}
-                </h2>
-                <h1 className="text-lg font-bold">{getJSONDateRange()}</h1>
-              </div>
-              <Button
-                className="bg-stone-900/10 dark:bg-stone-300/10 size-12 flex items-center justify-center rounded-full text-stone-800 dark:text-stone-300 text-lg hover:bg-stone-900/40 dark:hover:bg-stone-300/40 group duration-150 transition-all"
-                onClick={() => switchJSON("+")}
-              >
-                <ArrowRightCircleIcon className="size-7 group-hover:size-9 duration-150 transition-all" />{" "}
-              </Button>
-            </div>
-          </div>
-          <p className="dark:bg-stone-300/10 bg-stone-900/10 p-3 rounded text-lg max-w-96 text-center">
-            Visit{" "}
-            <a href="https://www.spotify.com/uk/account/privacy/">
-              Spotify &gt; Account &gt; Privacy
-            </a>{" "}
-            to download a copy of your streaming data.
-          </p>
-        </div>
+        <MainMenu
+          switchJSON={switchJSON}
+          jsonFileArray={jsonFileArray}
+          index={index}
+          dateRange={getJSONDateRange()}
+          darkMode={darkMode}
+        />
       </div>
     </>
   );

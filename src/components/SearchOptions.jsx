@@ -1,5 +1,7 @@
 import Filters from "./SearchOptions/Filters";
 import LoadLimit from "./SearchOptions/LoadLimit";
+import SearchArtistAlbumTitle from "./SearchOptions/SearchArtistAlbumTitle";
+import SearchDate from "./SearchOptions/SearchDate";
 
 export default function SearchOptions({
   filters,
@@ -16,6 +18,8 @@ export default function SearchOptions({
         timeFilter={filterSkippedSongs}
       />
       <LoadLimit loadLimit={loadLimit} setLoadLimit={setLoadLimit} />
+      <SearchArtistAlbumTitle />
+      <SearchDate />
     </div>
   );
 }
