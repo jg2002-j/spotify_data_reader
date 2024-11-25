@@ -5,7 +5,6 @@ function SidebarView() {
   const [sidebarWidth, setSidebarWidth] = useState(100);
 
   useEffect(() => {
-    console.log("hi im here now");
     const timer = setTimeout(() => {
       setSidebarWidth(100);
     }, 200);

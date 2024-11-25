@@ -14,13 +14,41 @@ import {
   ChevronDownIcon,
 } from "@heroicons/react/16/solid";
 
-import json from "../data/Streaming_History_Audio_2014-2017_0.json";
+import jsonFile from "../data/Streaming_History_Audio_2014-2017_0.json";
 import SongTile from "./SongTile";
 
 export default function JSONReader() {
-  const [loadLimit, setLoadLimit] = useState(25);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [timeFilter, setTimeFilter] = useState(10000);
+  const firstStreamTimeStamp = jsonFile[0].ts;
+  const firstStreamDate = new Date(firstStreamTimeStamp);
+  const startDate = firstStreamDate.toLocaleDateString();
+
+  const lastStreamTimeStamp = jsonFile[jsonFile.length - 1].ts;
+  const lastStreamDate = new Date(lastStreamTimeStamp);
+  const endDate = lastStreamDate.toLocaleDateString();
+
+  const getLocalStorageValue = (key, defaultValue) => {
+    try {
+      const localStorageValue = localStorage.getItem(key);
+      return localStorageValue !== null
+        ? JSON.parse(localStorageValue)
+        : defaultValue;
+    } catch (err) {
+      console.error("Error parsing localStorage value: " + err);
+      return defaultValue;
+    }
+  };
+
+  // useState with () => for lazy initialisation
+  const [loadLimit, setLoadLimit] = useState(() =>
+    getLocalStorageValue("loadLimit", 15)
+  );
+  const [currentPage, setCurrentPage] = useState(() =>
+    getLocalStorageValue("currentPage", 1)
+  );
+  const [timeFilter, setTimeFilter] = useState(() =>
+    getLocalStorageValue("timeFilter", 10000)
+  );
+
   const [filters, setFilters] = useState([timeFilter]);
 
   const [totalItemsToDisplay, SetTotalItemsToDisplay] = useState([]);
@@ -28,6 +56,19 @@ export default function JSONReader() {
 
   const startItem = (currentPage - 1) * loadLimit;
   const totalPages = Math.ceil(totalItemsToDisplay.length / loadLimit);
+
+  // persist user options to local storage
+  useEffect(() => {
+    localStorage.setItem("loadLimit", JSON.stringify(loadLimit));
+  }, [loadLimit]);
+
+  useEffect(() => {
+    localStorage.setItem("currentPage", JSON.stringify(currentPage));
+  }, [currentPage]);
+
+  useEffect(() => {
+    localStorage.setItem("timeFilter", JSON.stringify(timeFilter));
+  }, [timeFilter]);
 
   // filters
   const toggleTimeFilter = () => {
@@ -61,15 +102,15 @@ export default function JSONReader() {
     }
   };
   const updatePage = (target) => {
-    if (target > 0 && target < totalPages) {
-      setCurrentPage(target);
+    if (target > 0 && target <= totalPages) {
+      setCurrentPage(JSON.parse(target));
     }
   };
 
   // useEffect to update the total list of items to display through ALL pages
   // changes when timeFilter (or any other filters) change
   useEffect(() => {
-    const totalFilteredItems = json.filter(
+    const totalFilteredItems = jsonFile.filter(
       (item) => item.ms_played >= timeFilter
     );
     SetTotalItemsToDisplay(totalFilteredItems);
@@ -87,18 +128,14 @@ export default function JSONReader() {
 
   const mapJSON = () => {
     return currentItems.map((item, index) => {
-      if (item.ms_played > 20000) {
-        return <SongTile key={index} item={item}></SongTile>;
-      } else {
-        return null;
-      }
+      return <SongTile key={index} item={item} index={index} />;
     });
   };
 
   return (
     <>
+      <h2 className="text-2xl font-bold mb-3">{`${startDate} to ${endDate}`}</h2>
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-2xl font-bold">June 2024</h2>
         <div className="flex gap-5">
           <div className="flex gap-3 items-center text-right text-sm">
             <h4>Filters</h4>
@@ -123,23 +160,6 @@ export default function JSONReader() {
                         ? `Not displaying songs that were played for ${timeFilter / 1000} seconds or less.`
                         : `Currently displaying songs played for any duration.`}
                     </p>
-                    {/* // ! when switching time filter, it doesnt update the page to give the total load limit, e.g. if there are 15 songs on the page when the time filter is removing 10 seconds or less, when I update it to remove 20 seconds or less - there will be less than 15 songs on the page - the next page wont fill up */}
-                  </button>
-                </MenuItem>
-                <MenuItem>
-                  <button
-                    onClick={(e) => setLoadLimit(e.target.textContent)}
-                    className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
-                  >
-                    25
-                  </button>
-                </MenuItem>
-                <MenuItem>
-                  <button
-                    onClick={(e) => setLoadLimit(e.target.textContent)}
-                    className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
-                  >
-                    35
                   </button>
                 </MenuItem>
               </MenuItems>
@@ -159,7 +179,9 @@ export default function JSONReader() {
               >
                 <MenuItem>
                   <button
-                    onClick={(e) => setLoadLimit(e.target.textContent)}
+                    onClick={(e) =>
+                      setLoadLimit(JSON.parse(e.target.textContent))
+                    }
                     className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
                   >
                     15
@@ -167,7 +189,9 @@ export default function JSONReader() {
                 </MenuItem>
                 <MenuItem>
                   <button
-                    onClick={(e) => setLoadLimit(e.target.textContent)}
+                    onClick={(e) =>
+                      setLoadLimit(JSON.parse(e.target.textContent))
+                    }
                     className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
                   >
                     25
@@ -175,7 +199,9 @@ export default function JSONReader() {
                 </MenuItem>
                 <MenuItem>
                   <button
-                    onClick={(e) => setLoadLimit(e.target.textContent)}
+                    onClick={(e) =>
+                      setLoadLimit(JSON.parse(e.target.textContent))
+                    }
                     className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
                   >
                     35
@@ -190,10 +216,12 @@ export default function JSONReader() {
                 className={`size-5 ${currentPage == 1 ? "text-stone-400 dark:text-stone-700" : ""}`}
               />
             </Button>
-            <Input onChange={(e) => updatePage(e.target.value)}></Input>
-            <p>
-              {currentPage} / {totalPages}
-            </p>
+            <Input
+              onChange={(e) => updatePage(e.target.value)}
+              value={currentPage}
+              className="padded max-w-10"
+            ></Input>
+            <p>/ {totalPages}</p>
             <Button onClick={() => nextPage()} className="px-2">
               <ArrowRightCircleIcon
                 className={`size-5 ${currentPage == totalPages ? "text-stone-400 dark:text-stone-700" : ""}`}
