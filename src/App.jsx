@@ -1,31 +1,79 @@
-import { useState } from "react";
-import { Button, Checkbox } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/16/solid";
+/* eslint-disable react/prop-types */
+import { useEffect, useState, Suspense } from "react";
+import { Button } from "@headlessui/react";
+import { MoonIcon, SunIcon } from "@heroicons/react/16/solid";
+import { useImage } from "react-image";
+
 import "./App.css";
+import SidebarView from "./components/SidebarView";
 
 function App() {
   const [count, setCount] = useState(0);
-  const [enabled, setEnabled] = useState(true);
+  const [darkMode, setDarkMode] = useState(true);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.querySelector("html").classList.add("dark");
+      // console.log("dark mode");
+    } else {
+      document.querySelector("html").classList.remove("dark");
+      // console.log("light mode");
+    }
+  }, [darkMode]);
+
+  const FullSpotifyLogo = ({ darkMode }) => {
+    const imageSource = darkMode
+      ? "../Full_Logo_Green_CMYK.svg"
+      : "../Full_Logo_Black_CMYK.svg";
+    const { src } = useImage({
+      srcList: [imageSource],
+    });
+
+    return <img alt="Spotify Logo" src={src} />;
+  };
+
+  const showSidebar = () => {
+    return <SidebarView />;
+  };
 
   return (
-    <div className="">
-      <h1>Spotify JSON Reader</h1>
-      <div className="bg-black">
+    <>
+      <div className="absolute top-10 right-10 flex gap-2">
         <Button
-          className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-          onClick={() => setCount((count) => count + 1)}
+          onClick={() => setDarkMode((previous) => !previous)}
+          className="cursor-pointer px-4 py-2 rounded bg-black/10 dark:bg-white/10 p-1 ring-1 ring-black/15 dark:ring-white/15 ring-inset"
         >
-          count is {count}
+          <MoonIcon className="size-4 fill-black dark:fill-white block dark:hidden" />
+          <SunIcon className="size-4 fill-black dark:fill-white hidden dark:block" />
         </Button>
-        <Checkbox
-          checked={enabled}
-          onChange={setEnabled}
-          className="group size-6 rounded-md bg-white/10 p-1 ring-1 ring-white/15 ring-inset data-[checked]:bg-white"
-        >
-          <CheckIcon className="hidden size-4 fill-black group-data-[checked]:block" />
-        </Checkbox>
       </div>
-    </div>
+
+      <div className="bg-stone-300 dark:bg-stone-900 p-10 h-dvh w-vw flex gap-2 items-center justify-center">
+        {showSidebar()}
+        <div className="w-[50vw] border-2 flex flex-col gap-5 items-center">
+          <div className="w-full max-w-96">
+            <Suspense
+              fallback={
+                <h2 className="text-stone-600 font-extrabold">Loading...</h2>
+              }
+            >
+              <FullSpotifyLogo darkMode={darkMode} />
+            </Suspense>
+          </div>
+          <h1 className="text-3xl font-bold text-stone-800 dark:text-stone-300 select-none">
+            Spotify JSON Reader
+          </h1>
+          <div className="flex gap-5 items-center">
+            <Button
+              className="inline-flex items-center gap-2 rounded-md bg-stone-500 dark:bg-stone-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-stone-600 data-[open]:bg-stone-700 data-[focus]:outline-1 data-[focus]:outline-white"
+              onClick={() => setCount((count) => count + 1)}
+            >
+              count is {count}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
