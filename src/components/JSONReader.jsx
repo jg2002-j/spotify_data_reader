@@ -103,7 +103,7 @@ export default function JSONReader({ selectedJSON }) {
       (item) => item.ms_played >= timeFilter
     );
     SetTotalItemsToDisplay(totalFilteredItems);
-  }, [timeFilter]);
+  }, [timeFilter, selectedJSON]);
 
   // useEffect to refresh the current list of items loaded on the CURRENT page
   // changes when startItem, loadLimit (where in the list user is positioned) or totalItemsToDisplay (total list contents) change
