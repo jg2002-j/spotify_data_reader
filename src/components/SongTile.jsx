@@ -1,7 +1,8 @@
 import { useEffect, useState, Suspense } from "react";
 import { useImage } from "react-image";
+import { Button } from "@headlessui/react";
 
-export default function SongTile({ item }) {
+export default function SongTile({ item, setSearchGeneric }) {
   const fetch_url = `https://open.spotify.com/oembed?url=${item.spotify_track_uri}`;
 
   const AlbumCover = ({ thumbnail_url }) => {
@@ -94,7 +95,7 @@ export default function SongTile({ item }) {
 
   return (
     <div className="w-full p-5 bg-stone-900/10 dark:bg-stone-300/10 rounded-md flex items-center gap-5 group">
-      <div className="h-24 w-24 aspect-square group-[hover]:h-32 group-[hover]:w-32 duration-300 transition-all rounded overflow-hidden">
+      <div className="w-24 min-w-24 aspect-square group-hover:min-w-28 duration-300 transition-all rounded overflow-hidden">
         <Suspense
           fallback={
             <h2 className="text-stone-600 font-extrabold">Loading...</h2>
@@ -103,17 +104,31 @@ export default function SongTile({ item }) {
           <AlbumCover thumbnail_url={thumbnailURL} />
         </Suspense>
       </div>
-      <div className="flex flex-col gap-2">
-        <h2 className="text-xl font-bold w-56 truncate text-ellipsis">
+      <div className="flex flex-col gap-2 w-full overflow-hidden">
+        <Button
+          onClick={(e) => setSearchGeneric(e.target.textContent)}
+          className="text-start text-xl font-bold truncate"
+        >
           {item.master_metadata_track_name}
-        </h2>
+        </Button>
         <div className="flex items-center gap-5">
-          <p className="padded">{item.master_metadata_album_album_name}</p>{" "}
-          <p className="padded">{item.master_metadata_album_artist_name}</p>
+          <Button
+            onClick={(e) => setSearchGeneric(e.target.textContent)}
+            className="default px-2 py-1 text-start"
+          >
+            {item.master_metadata_album_album_name}
+          </Button>
+          <Button
+            onClick={(e) => setSearchGeneric(e.target.textContent)}
+            className="default px-2 py-1 text-start"
+          >
+            {item.master_metadata_album_artist_name}
+          </Button>
+          {/* <p className="padded">{item.master_metadata_album_artist_name}</p> */}
         </div>
         <div className="flex items-center gap-5">
-          <p className="padded">{parseDate(item.ts)}</p>
-          <p className="padded">{parseMs(item.ms_played)}</p>
+          <p className="default px-2 py-1">{parseDate(item.ts)}</p>
+          <p className="default px-2 py-1">{parseMs(item.ms_played)}</p>
         </div>
         <div className="flex gap-2">
           {returnShuffleIcon(item.shuffle)}

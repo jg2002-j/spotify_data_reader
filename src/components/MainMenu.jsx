@@ -25,8 +25,8 @@ export default function MainMenu({
   };
 
   return (
-    <div className="max-w-[50vw] flex flex-col gap-5 items-center me-5 border-2">
-      <div className="w-full max-w-96">
+    <div className="w-[40vw] flex flex-col gap-5 items-center p-10">
+      <div className="w-full max-w-80">
         <Suspense
           fallback={
             <h2 className="text-stone-600 font-extrabold">Loading...</h2>
@@ -35,9 +35,9 @@ export default function MainMenu({
           <FullSpotifyLogo />
         </Suspense>
       </div>
-      <h1 className="text-3xl font-bold select-none">Spotify JSON Reader</h1>
-      <div className="w-full default p-5 flex flex-col gap-3 items-center">
-        <div className="flex gap-3 items-center">
+      <h1 className="text-3xl font-bold select-none">Spotify Data Reader</h1>
+      <div className="w-96 default p-5 flex flex-col gap-3 items-center ">
+        <div className="flex gap-5 items-center">
           <Button
             className="bg-stone-900/10 dark:bg-stone-300/10 size-12 flex items-center justify-center rounded-full text-stone-800 dark:text-stone-300 text-lg hover:bg-stone-900/40 dark:hover:bg-stone-300/40 group duration-150 transition-all"
             onClick={() => switchJSON("-")}
@@ -60,7 +60,7 @@ export default function MainMenu({
           </Button>
         </div>
       </div>
-      <p className="w-full dark:bg-stone-300/10 bg-stone-900/10 p-3 rounded text-sm text-balance max-w-80 text-center">
+      <p className="w-96 default p-3 rounded text-sm text-balance text-center">
         Visit{" "}
         <a href="https://www.spotify.com/uk/account/privacy/">
           Spotify &gt; Account &gt; Privacy

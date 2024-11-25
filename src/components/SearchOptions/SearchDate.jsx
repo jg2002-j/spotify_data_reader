@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function SearchDate() {
-  return <div>SearchDate</div>;
+  return <div className="text-sm default px-2 py-1">SearchDate</div>;
 }

@@ -18,11 +18,11 @@ export default function JSONReader({ selectedJSON, dateRange }) {
   };
 
   // useState with () => for lazy initialisation
-  const [showOptionsPanel, setShowOptionsPanel] = useState(
+  const [showOptionsPanel, setShowOptionsPanel] = useState(() =>
     getLocalStorageValue("showOptionsPanel", false)
   );
   const [loadLimit, setLoadLimit] = useState(() =>
-    getLocalStorageValue("loadLimit", 15)
+    getLocalStorageValue("loadLimit", 25)
   );
   const [currentPage, setCurrentPage] = useState(() =>
     getLocalStorageValue("currentPage", 1)
@@ -31,6 +31,7 @@ export default function JSONReader({ selectedJSON, dateRange }) {
     getLocalStorageValue("filterSkippedSongs", true)
   );
 
+  const [searchGeneric, setSearchGeneric] = useState("");
   const [filters, setFilters] = useState([]);
 
   const [totalItemsToDisplay, SetTotalItemsToDisplay] = useState([]);
@@ -58,28 +59,6 @@ export default function JSONReader({ selectedJSON, dateRange }) {
       JSON.stringify(filterSkippedSongs)
     );
   }, [filterSkippedSongs]);
-
-  // filters
-  const toggleSkippedFilter = () => {
-    setFilterSkippedSongs((filterSkippedSongs) => !filterSkippedSongs);
-  };
-
-  // page navigation functions
-  const previousPage = () => {
-    if (currentPage != 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-  const nextPage = () => {
-    if (currentPage + 1 <= totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-  const updatePage = (target) => {
-    if (target > 0 && target <= totalPages) {
-      setCurrentPage(JSON.parse(target));
-    }
-  };
 
   // useEffect to update the total list of items to display through ALL pages
   // changes when timeFilter (or any other filters) change
@@ -121,7 +100,14 @@ export default function JSONReader({ selectedJSON, dateRange }) {
 
   const mapJSON = () => {
     return currentItems.map((item, index) => {
-      return <SongTile key={index} item={item} index={index} />;
+      return (
+        <SongTile
+          key={index}
+          item={item}
+          // index={index}
+          setSearchGeneric={setSearchGeneric}
+        />
+      );
     });
   };
 
@@ -129,9 +115,9 @@ export default function JSONReader({ selectedJSON, dateRange }) {
     <>
       <h2 className="text-2xl font-bold mb-3">{dateRange}</h2>
       <div className="flex flex-wrap justify-between items-center gap-3 mb-5">
-        <div className="flex gap-3">
+        <div className="flex items-center gap-3">
           <Button
-            className={`default px-2 py-1 text-sm ${showOptionsPanel ? "bg-stone-900/30 dark:bg-stone-300/30 ring-1 ring-stone-900 dark:ring-stone-300" : ""}`}
+            className={`default px-2 py-1 text-sm text-nowrap ${showOptionsPanel ? "bg-stone-900/30 dark:bg-stone-300/30 ring-1 ring-stone-900 dark:ring-stone-300" : ""}`}
             onClick={() =>
               setShowOptionsPanel((showOptionsPanel) => !showOptionsPanel)
             }
@@ -141,18 +127,18 @@ export default function JSONReader({ selectedJSON, dateRange }) {
           {showOptionsPanel && (
             <SearchOptions
               filters={filters}
-              toggleSkippedFilter={toggleSkippedFilter}
               filterSkippedSongs={filterSkippedSongs}
+              setFilterSkippedSongs={setFilterSkippedSongs}
               loadLimit={loadLimit}
               setLoadLimit={setLoadLimit}
+              searchGeneric={searchGeneric}
+              setSearchGeneric={setSearchGeneric}
             />
           )}
         </div>
         <Pages
           currentPage={currentPage}
-          updatePage={updatePage}
-          nextPage={nextPage}
-          previousPage={previousPage}
+          setCurrentPage={setCurrentPage}
           totalPages={totalPages}
         />
       </div>
@@ -161,9 +147,7 @@ export default function JSONReader({ selectedJSON, dateRange }) {
         {mapJSON()}
         <Pages
           currentPage={currentPage}
-          updatePage={updatePage}
-          nextPage={nextPage}
-          previousPage={previousPage}
+          setCurrentPage={setCurrentPage}
           totalPages={totalPages}
         />
       </div>

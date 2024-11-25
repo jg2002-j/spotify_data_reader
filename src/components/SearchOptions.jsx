@@ -5,20 +5,30 @@ import SearchDate from "./SearchOptions/SearchDate";
 
 export default function SearchOptions({
   filters,
-  toggleSkippedFilter,
   filterSkippedSongs,
+  setFilterSkippedSongs,
   loadLimit,
   setLoadLimit,
+  searchGeneric,
+  setSearchGeneric,
 }) {
+  // filters
+  const toggleSkippedFilter = () => {
+    setFilterSkippedSongs((filterSkippedSongs) => !filterSkippedSongs);
+  };
+
   return (
-    <div className="flex gap-5 flex-wrap">
+    <div className="flex gap-3 flex-wrap">
       <Filters
         filters={filters}
         toggleSkippedFilter={toggleSkippedFilter}
         timeFilter={filterSkippedSongs}
       />
       <LoadLimit loadLimit={loadLimit} setLoadLimit={setLoadLimit} />
-      <SearchArtistAlbumTitle />
+      <SearchArtistAlbumTitle
+        searchGeneric={searchGeneric}
+        setSearchGeneric={setSearchGeneric}
+      />
       <SearchDate />
     </div>
   );

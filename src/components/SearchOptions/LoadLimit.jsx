@@ -1,54 +1,64 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/16/solid";
+import {
+  SquaresPlusIcon,
+  CheckCircleIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/16/solid";
 
 export default function LoadLimit({ loadLimit, setLoadLimit }) {
   return (
-    <div className="flex gap-3 items-center text-right text-sm">
-      <h4>Show</h4>
-      <Menu>
-        <MenuButton className="padded flex gap-2">
-          {loadLimit}
-          <ChevronDownIcon className="size-4 fill-white/60" />
-        </MenuButton>
-        <MenuItems
-          transition
-          anchor="bottom end"
-          className="w-16 text-sm origin-top-right rounded border border-white/5 bg-stone-300/90 dark:bg-stone-900/90 dark:text-stone-300 text-stone-800 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
-        >
-          <MenuItem>
-            <button
-              onClick={(e) => setLoadLimit(JSON.parse(e.target.textContent))}
-              className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
-            >
-              10
-            </button>
-          </MenuItem>
-          <MenuItem>
-            <button
-              onClick={(e) => setLoadLimit(JSON.parse(e.target.textContent))}
-              className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
-            >
-              15
-            </button>
-          </MenuItem>
-          <MenuItem>
-            <button
-              onClick={(e) => setLoadLimit(JSON.parse(e.target.textContent))}
-              className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
-            >
-              25
-            </button>
-          </MenuItem>
-          <MenuItem>
-            <button
-              onClick={(e) => setLoadLimit(JSON.parse(e.target.textContent))}
-              className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
-            >
-              35
-            </button>
-          </MenuItem>
-        </MenuItems>
-      </Menu>
-    </div>
+    <Menu>
+      <MenuButton className="default flex items-center px-2 py-1 gap-2 text-sm">
+        <SquaresPlusIcon className="size-3" />
+        <p className="text-nowrap">{`Showing ${loadLimit} items`}</p>
+        <ChevronDownIcon className="size-4" />
+      </MenuButton>
+
+      <MenuItems
+        transition
+        anchor="bottom start"
+        className="mt-2 w-24 text-sm origin-top-right rounded bg-stone-400 dark:bg-stone-800 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+      >
+        <MenuItem>
+          <button
+            onClick={() => setLoadLimit(10)}
+            className="group flex w-full items-center gap-3 py-2 px-3 data-[focus]:bg-white/10"
+          >
+            <div className="default p-1">
+              <CheckCircleIcon
+                className={`size-3 fill-white ${loadLimit != 10 ? "opacity-0" : ""}`}
+              />
+            </div>
+            <p className="text-start">10</p>
+          </button>
+        </MenuItem>
+        <MenuItem>
+          <button
+            onClick={() => setLoadLimit(25)}
+            className="group flex w-full items-center gap-3 py-2 px-3 data-[focus]:bg-white/10"
+          >
+            <div className="default p-1">
+              <CheckCircleIcon
+                className={`size-3 fill-white ${loadLimit != 25 ? "opacity-0" : ""}`}
+              />
+            </div>
+            <p className="text-start">25</p>
+          </button>
+        </MenuItem>
+        <MenuItem>
+          <button
+            onClick={() => setLoadLimit(50)}
+            className="group flex w-full items-center gap-3 py-2 px-3 data-[focus]:bg-white/10"
+          >
+            <div className="default p-1">
+              <CheckCircleIcon
+                className={`size-3 fill-white ${loadLimit != 50 ? "opacity-0" : ""}`}
+              />
+            </div>
+            <p className="text-start">50</p>
+          </button>
+        </MenuItem>
+      </MenuItems>
+    </Menu>
   );
 }

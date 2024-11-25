@@ -4,13 +4,24 @@ import {
   ArrowRightCircleIcon,
 } from "@heroicons/react/16/solid";
 
-export default function Pages({
-  currentPage,
-  updatePage,
-  previousPage,
-  nextPage,
-  totalPages,
-}) {
+export default function Pages({ currentPage, setCurrentPage, totalPages }) {
+  // page navigation functions
+  const previousPage = () => {
+    if (currentPage != 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const nextPage = () => {
+    if (currentPage + 1 <= totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const updatePage = (target) => {
+    if (target > 0 && target <= totalPages) {
+      setCurrentPage(JSON.parse(target));
+    }
+  };
+
   return (
     <div className="flex gap-2 items-center text-sm">
       <Button onClick={() => previousPage()} className="px-2">

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import JSONReader from "./JSONReader";
 
 function SidebarView({ selectedJSON, dateRange }) {

@@ -8,7 +8,7 @@ import {
 export default function Filters({ filters, toggleSkippedFilter, timeFilter }) {
   return (
     <Menu>
-      <MenuButton className="default flex items-center px-2 gap-2 text-sm">
+      <MenuButton className="default flex items-center px-2 py-1 gap-2 text-sm">
         <FunnelIcon className="size-3" />
         <p className="text-nowrap">
           {filters.length}{" "}
