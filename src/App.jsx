@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, Checkbox, CheckIcon } from "@headlessui/react";
+import { Button, Checkbox } from "@headlessui/react";
+import { CheckIcon } from "@heroicons/react/16/solid";
 import "./App.css";
 
 function App() {
