@@ -1,6 +1,13 @@
 import { useEffect, useState, Suspense } from "react";
 import { useImage } from "react-image";
 import { Button } from "@headlessui/react";
+import {
+  User,
+  DiscAlbum,
+  RectangleEllipsis,
+  Shuffle,
+  SkipForward,
+} from "lucide-react";
 
 export default function SongTile({ item, setSearchGeneric }) {
   const fetch_url = `https://open.spotify.com/oembed?url=${item.spotify_track_uri}`;
@@ -41,58 +48,6 @@ export default function SongTile({ item, setSearchGeneric }) {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
-  const returnShuffleIcon = (shuffled) => {
-    if (shuffled) {
-      return (
-        <div className="padded">
-          <svg
-            className="w-4 h-4 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="1"
-              d="M13.484 9.166 15 7h5m0 0-3-3m3 3-3 3M4 17h4l1.577-2.253M4 7h4l7 10h5m0 0-3 3m3-3-3-3"
-            />
-          </svg>
-        </div>
-      );
-    }
-  };
-
-  const returnSkipIcon = (skipped) => {
-    if (skipped) {
-      return (
-        <div className="padded">
-          <svg
-            className="w-4 h-4 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="1"
-              d="M16 6v12M8 6v12l8-6-8-6Z"
-            />
-          </svg>
-        </div>
-      );
-    }
-  };
-
   return (
     <div className="w-full p-5 bg-stone-900/10 dark:bg-stone-300/10 rounded-md flex items-center gap-5 group">
       <div className="w-24 min-w-24 aspect-square group-hover:min-w-28 duration-300 transition-all rounded overflow-hidden">
@@ -111,28 +66,50 @@ export default function SongTile({ item, setSearchGeneric }) {
         >
           {item.master_metadata_track_name}
         </Button>
-        <div className="flex items-center gap-5">
-          <Button
-            onClick={(e) => setSearchGeneric(e.target.textContent)}
-            className="default px-2 py-1 text-start"
-          >
-            {item.master_metadata_album_album_name}
-          </Button>
-          <Button
-            onClick={(e) => setSearchGeneric(e.target.textContent)}
-            className="default px-2 py-1 text-start"
-          >
-            {item.master_metadata_album_artist_name}
-          </Button>
-          {/* <p className="padded">{item.master_metadata_album_artist_name}</p> */}
-        </div>
-        <div className="flex items-center gap-5">
-          <p className="default px-2 py-1">{parseDate(item.ts)}</p>
-          <p className="default px-2 py-1">{parseMs(item.ms_played)}</p>
-        </div>
-        <div className="flex gap-2">
-          {returnShuffleIcon(item.shuffle)}
-          {returnSkipIcon(item.skipped)}
+        <div className="flex flex-col items-start gap-2">
+          <div className="flex gap-2 items-center justify-start w-full overflow-hidden">
+            <div className="default p-1">
+              <DiscAlbum className="size-4" />
+            </div>
+            <Button
+              onClick={(e) => setSearchGeneric(e.target.textContent)}
+              className="default px-2 py-1 text-start truncate"
+            >
+              {item.master_metadata_album_album_name}
+            </Button>
+          </div>
+          <div className="flex gap-2 items-center justify-start w-full overflow-hidden">
+            <div className="default p-1">
+              <User className="size-4" />
+            </div>
+            <Button
+              onClick={(e) => setSearchGeneric(e.target.textContent)}
+              className="default px-2 py-1 text-start truncate"
+            >
+              {item.master_metadata_album_artist_name}
+            </Button>
+          </div>
+          <div className="flex items-center justify-start gap-2">
+            <div className="default p-1">
+              <RectangleEllipsis className="size-4" />
+            </div>
+            <p className="default px-2 py-1 text-star flex gap-2 items-center">
+              {parseDate(item.ts)}
+            </p>
+            <p className="default px-2 py-1 text-star flex gap-2 items-center">
+              {parseMs(item.ms_played)}
+            </p>
+            {item.shuffle && (
+              <div className="default p-1">
+                <Shuffle className="size-3" />
+              </div>
+            )}
+            {item.skipped && (
+              <div className="default p-1">
+                <SkipForward className="size-3" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

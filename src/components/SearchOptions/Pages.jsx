@@ -29,7 +29,7 @@ export default function Pages({ currentPage, setCurrentPage, totalPages }) {
       <Input
         onChange={(e) => updatePage(e.target.value)}
         value={currentPage}
-        className="padded max-w-12 text-center"
+        className="default px-2 py-1 max-w-12 text-center"
       ></Input>
       <p>/ {totalPages}</p>
       <Button onClick={() => nextPage()} className="px-2">

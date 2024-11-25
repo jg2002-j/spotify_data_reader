@@ -22,7 +22,7 @@ export default function LoadLimit({ loadLimit, setLoadLimit }) {
           >
             <div className="default p-1">
               <Check
-                className={`size-3 fill-white ${loadLimit != 10 ? "opacity-0" : ""}`}
+                className={`size-3 text-white ${loadLimit != 10 ? "opacity-0" : ""}`}
               />
             </div>
             <p className="text-start">10</p>
@@ -35,7 +35,7 @@ export default function LoadLimit({ loadLimit, setLoadLimit }) {
           >
             <div className="default p-1">
               <Check
-                className={`size-3 fill-white ${loadLimit != 25 ? "opacity-0" : ""}`}
+                className={`size-3 text-white ${loadLimit != 25 ? "opacity-0" : ""}`}
               />
             </div>
             <p className="text-start">25</p>
@@ -48,7 +48,7 @@ export default function LoadLimit({ loadLimit, setLoadLimit }) {
           >
             <div className="default p-1">
               <Check
-                className={`size-3 fill-white ${loadLimit != 50 ? "opacity-0" : ""}`}
+                className={`size-3 text-white ${loadLimit != 50 ? "opacity-0" : ""}`}
               />
             </div>
             <p className="text-start">50</p>

@@ -94,22 +94,24 @@ function App() {
   return (
     <>
       <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
-      <div className="bg-stone-300 dark:bg-stone-900 h-dvh w-vw flex items-center justify-between transition-all duration-1000">
-        <div className="max-w-[70vw] flex justify-start items-center">
-          {selectedJSON && (
-            <SidebarView
-              selectedJSON={selectedJSON}
-              dateRange={getJSONDateRange()}
-            />
-          )}
+      <div className="noise bg-stone-300 dark:bg-stone-900 h-dvh w-vw transition-all duration-1000 flex items-center justify-center">
+        <div className="w-full max-w-[2000px] flex items-center justify-between">
+          <div className="w-[60%] flex justify-start items-center">
+            {selectedJSON && (
+              <SidebarView
+                selectedJSON={selectedJSON}
+                dateRange={getJSONDateRange()}
+              />
+            )}
+          </div>
+          <MainMenu
+            switchJSON={switchJSON}
+            jsonFileArray={jsonFileArray}
+            index={index}
+            dateRange={getJSONDateRange()}
+            darkMode={darkMode}
+          />
         </div>
-        <MainMenu
-          switchJSON={switchJSON}
-          jsonFileArray={jsonFileArray}
-          index={index}
-          dateRange={getJSONDateRange()}
-          darkMode={darkMode}
-        />
       </div>
     </>
   );

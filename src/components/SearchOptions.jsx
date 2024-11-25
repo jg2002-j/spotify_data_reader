@@ -11,6 +11,8 @@ export default function SearchOptions({
   setLoadLimit,
   searchGeneric,
   setSearchGeneric,
+  searchDate,
+  setSearchDate,
 }) {
   // filters
   const toggleSkippedFilter = () => {
@@ -18,7 +20,7 @@ export default function SearchOptions({
   };
 
   return (
-    <div className="flex gap-3 flex-wrap">
+    <div className="flex items-center gap-3 flex-wrap">
       <Filters
         filters={filters}
         toggleSkippedFilter={toggleSkippedFilter}
@@ -29,7 +31,7 @@ export default function SearchOptions({
         searchGeneric={searchGeneric}
         setSearchGeneric={setSearchGeneric}
       />
-      <SearchDate />
+      <SearchDate searchDate={searchDate} setSearchDate={setSearchDate} />
     </div>
   );
 }

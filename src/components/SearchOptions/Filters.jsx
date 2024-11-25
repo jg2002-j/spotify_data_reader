@@ -26,7 +26,7 @@ export default function Filters({ filters, toggleSkippedFilter, timeFilter }) {
           >
             <div className="default p-1">
               <Check
-                className={`size-3 fill-white ${timeFilter == 0 ? "opacity-0" : ""}`}
+                className={`size-3 text-white ${timeFilter == 0 ? "opacity-0" : ""}`}
               />
             </div>
             <p className="text-start">Hide songs which were skipped</p>

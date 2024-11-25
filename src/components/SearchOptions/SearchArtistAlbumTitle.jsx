@@ -1,4 +1,4 @@
-import { Description, Field, Input, Label, Button } from "@headlessui/react";
+import { Field, Input, Label, Button } from "@headlessui/react";
 import { Search, X } from "lucide-react";
 
 export default function SearchArtistAlbumTitle({
@@ -6,11 +6,10 @@ export default function SearchArtistAlbumTitle({
   setSearchGeneric,
 }) {
   return (
-    <Field className="text-sm">
-      <Label>Search for an artist, song or album name</Label>
-      <Description className="flex items-center px-2 py-1 gap-2">
-        {searchGeneric}
-      </Description>
+    <Field className="text-sm NOT_IMPLEMENTED">
+      <Label className="text-xs">
+        Search for an artist, song or album name.
+      </Label>
       <div className="default flex items-center px-2 py-1 gap-2">
         <Search className="size-4" />
         <Input

@@ -32,6 +32,7 @@ export default function JSONReader({ selectedJSON, dateRange }) {
   );
 
   const [searchGeneric, setSearchGeneric] = useState("");
+  const [searchDate, setSearchDate] = useState("");
   const [filters, setFilters] = useState([]);
 
   const [totalItemsToDisplay, SetTotalItemsToDisplay] = useState([]);
@@ -114,7 +115,9 @@ export default function JSONReader({ selectedJSON, dateRange }) {
   return (
     <>
       <h2 className="text-2xl font-bold mb-3">{dateRange}</h2>
-      <div className="flex flex-wrap justify-between items-center gap-3 mb-5">
+      <div
+        className={`flex flex-wrap ${showOptionsPanel ? "justify-center" : "justify-between"} items-center gap-3 mb-5`}
+      >
         <div className="flex items-center gap-3">
           <Button
             className={`default px-2 py-1 text-sm text-nowrap ${showOptionsPanel ? "bg-stone-900/30 dark:bg-stone-300/30 ring-1 ring-stone-900 dark:ring-stone-300" : ""}`}
@@ -133,6 +136,8 @@ export default function JSONReader({ selectedJSON, dateRange }) {
               setLoadLimit={setLoadLimit}
               searchGeneric={searchGeneric}
               setSearchGeneric={setSearchGeneric}
+              searchDate={searchDate}
+              setSearchDate={setSearchDate}
             />
           )}
         </div>

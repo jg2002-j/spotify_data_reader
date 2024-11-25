@@ -3,7 +3,7 @@ import JSONReader from "./JSONReader";
 function SidebarView({ selectedJSON, dateRange }) {
   return (
     <div
-      className={`h-dvh rounded-e-3xl dark:bg-stone-300/10 bg-stone-900/10 w-full text-stone-800 dark:text-stone-300 max-w-[500px] transition-all duration-[2500ms] flex flex-col p-5 `}
+      className={`h-dvh noise bg-stone-900/10 dark:bg-stone-300/10 duration-300 text-stone-800 dark:text-stone-300 transition-all rounded-e-3xl max-w-[500px] flex flex-col p-5 `}
     >
       <JSONReader
         selectedJSON={selectedJSON}

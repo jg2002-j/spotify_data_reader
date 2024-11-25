@@ -21,14 +21,22 @@ h4 {
   @apply text-stone-800 dark:text-stone-300;
 }
 
-a {
-  @apply dark:text-spotify_green text-spotify_black hover:font-bold transition-all duration-200;
+.NOT_IMPLEMENTED {
+  @apply text-red-900 bg-stone-700 select-none;
 }
 
-.padded {
-  @apply rounded bg-stone-900/10 dark:bg-stone-300/10 p-1;
+.noise {
+  background-image: url(../public/nnnoise.svg);
+}
+
+a {
+  @apply dark:text-spotify_green text-spotify_black font-bold hover:underline transition-all duration-200;
 }
 
 .default {
-  @apply bg-stone-900/10 hover:bg-stone-900/20 dark:bg-stone-300/10 dark:hover:bg-stone-300/20 duration-300 transition-all rounded-md;
+  @apply noise bg-stone-900/10 hover:bg-stone-900/20 dark:bg-stone-300/10 dark:hover:bg-stone-300/20 text-stone-800 dark:text-stone-300 duration-300 transition-all rounded-md;
+}
+
+.default_static {
+  @apply noise bg-stone-900/10 dark:bg-stone-300/10 duration-300 text-stone-800 dark:text-stone-300 transition-all rounded-md;
 }
