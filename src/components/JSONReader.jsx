@@ -5,15 +5,7 @@ import Filters from "./Filters";
 import Show from "./Show";
 import Pages from "./Pages";
 
-export default function JSONReader({ selectedJSON }) {
-  const firstStreamTimeStamp = selectedJSON[0].ts;
-  const firstStreamDate = new Date(firstStreamTimeStamp);
-  const startDate = firstStreamDate.toLocaleDateString();
-
-  const lastStreamTimeStamp = selectedJSON[selectedJSON.length - 1].ts;
-  const lastStreamDate = new Date(lastStreamTimeStamp);
-  const endDate = lastStreamDate.toLocaleDateString();
-
+export default function JSONReader({ selectedJSON, dateRange }) {
   const getLocalStorageValue = (key, defaultValue) => {
     try {
       const localStorageValue = localStorage.getItem(key);
@@ -123,7 +115,7 @@ export default function JSONReader({ selectedJSON }) {
 
   return (
     <>
-      <h2 className="text-2xl font-bold mb-3">{`${startDate} to ${endDate}`}</h2>
+      <h2 className="text-2xl font-bold mb-3">{dateRange}</h2>
       <div className="flex justify-between items-center mb-5">
         <div className="flex gap-5">
           <Filters

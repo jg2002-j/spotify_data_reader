@@ -13,20 +13,25 @@ import SidebarView from "./components/SidebarView";
 
 const jsonFiles = import.meta.glob("./data/*.json");
 
+//! the index fetch from local storage is brocken </3
+
 function App() {
   const getLocalStorageValue = (key, defaultValue) => {
     try {
       const localStorageValue = localStorage.getItem(key);
-      return localStorageValue !== null
-        ? JSON.parse(localStorageValue)
-        : defaultValue;
+      console.log(localStorageValue);
+      if (!localStorageValue) {
+        return defaultValue;
+      } else {
+        return JSON.parse(localStorageValue);
+      }
     } catch (err) {
       console.error("Error parsing localStorage value: " + err);
       return defaultValue;
     }
   };
 
-  const [count, setCount] = useState(getLocalStorageValue("count", 1));
+  const [index, setIndex] = useState(getLocalStorageValue("index", 0));
   const [darkMode, setDarkMode] = useState(true);
   const [jsonFileArray, setJsonFileArray] = useState([]);
   const [selectedJSON, setSelectedJSON] = useState(null);
@@ -65,36 +70,44 @@ function App() {
     loadFiles();
   }, []);
 
+  useEffect(() => {
+    if (index > jsonFileArray.length) {
+      setIndex(0);
+    }
+  }, [jsonFileArray.length, index]);
+
   // once jsonFileArray is not empty, choose a JSON to load by default
   // modules: https://vite.dev/guide/features#glob-import
   useEffect(() => {
     if (jsonFileArray.length > 0) {
-      setSelectedJSON(jsonFileArray[count].default);
+      setSelectedJSON(jsonFileArray[index].default);
     }
-  }, [count, jsonFileArray]);
+  }, [index, jsonFileArray]);
 
   const switchJSON = (direction) => {
     if (direction == "+") {
-      if (count + 1 < jsonFileArray.length) {
-        setCount(count + 1);
+      if (index + 1 < jsonFileArray.length) {
+        setIndex(index + 1);
       } else {
-        setCount(0);
+        setIndex(0);
       }
     } else {
-      if (count - 1 >= 0) {
-        setCount(count - 1);
+      if (index - 1 >= 0) {
+        setIndex(index - 1);
       } else {
-        setCount(jsonFileArray.length - 1);
+        setIndex(jsonFileArray.length - 1);
       }
     }
   };
 
-  // persist count to local storage
+  // persist index to local storage
   useEffect(() => {
-    localStorage.setItem("count", JSON.stringify(count));
-  }, [count]);
+    if (index !== 0 && jsonFileArray.length > 0) {
+      localStorage.setItem("index", JSON.stringify(index));
+    }
+  }, [index]);
 
-  const getJSONRange = () => {
+  const getJSONDateRange = () => {
     if (!selectedJSON || selectedJSON.length === 0) {
       return "Loading...";
     } else {
@@ -109,6 +122,7 @@ function App() {
 
   return (
     <>
+      {/* dark/light mode toggle */}
       <div className="absolute top-10 right-10 flex gap-2 transition-all duration-1000">
         <Button
           onClick={() => setDarkMode((previous) => !previous)}
@@ -120,7 +134,12 @@ function App() {
       </div>
 
       <div className="bg-stone-300 dark:bg-stone-900 py-10 h-dvh w-vw flex gap-2 items-center justify-center transition-all duration-1000">
-        {selectedJSON && <SidebarView selectedJSON={selectedJSON} />}
+        {selectedJSON && (
+          <SidebarView
+            selectedJSON={selectedJSON}
+            dateRange={getJSONDateRange()}
+          />
+        )}
         <div className="w-[50vw] flex flex-col gap-5 items-center me-5 ">
           <div className="w-full max-w-96">
             <Suspense
@@ -145,12 +164,12 @@ function App() {
               </Button>
               <div className="flex flex-col gap-2 items-center">
                 <h2 className="bg-stone-900/10 dark:bg-stone-300/10 px-5 py-1 text-sm rounded text-stone-800 dark:text-stone-300">
-                  {count + 1} /{" "}
+                  {index + 1} /{" "}
                   {jsonFileArray.length === 0
                     ? "Loading..."
                     : jsonFileArray.length}
                 </h2>
-                <h1 className="text-lg font-bold">{getJSONRange()}</h1>
+                <h1 className="text-lg font-bold">{getJSONDateRange()}</h1>
               </div>
               <Button
                 className="bg-stone-900/10 dark:bg-stone-300/10 size-12 flex items-center justify-center rounded-full text-stone-800 dark:text-stone-300 text-lg hover:bg-stone-900/40 dark:hover:bg-stone-300/40 group duration-150 transition-all"
