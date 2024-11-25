@@ -14,6 +14,7 @@ import {
 } from "@heroicons/react/16/solid";
 
 import json from "../data/Streaming_History_Audio_2014-2017_0.json";
+import SongTile from "./SongTile";
 
 export default function JSONReader() {
   const [loadLimit, setLoadLimit] = useState(25);
@@ -42,11 +43,10 @@ export default function JSONReader() {
           <div className="flex gap-3 items-center text-right text-sm">
             <h4>Show</h4>
             <Menu>
-              <MenuButton className="inline-flex items-center gap-2 rounded bg-stone-900/50 py-1 px-2 focus:outline-none data-[hover]:bg-stone-900/30 data-[open]:bg-stone-900/30 data-[focus]:outline-1 data-[focus]:outline-white">
+              <MenuButton className="inline-flex items-center gap-2 rounded bg-stone-900/20  py-1 px-2 focus:outline-none data-[hover]:bg-stone-900/30 data-[open]:bg-stone-900/30 data-[focus]:outline-1 data-[focus]:outline-white">
                 {loadLimit}
                 <ChevronDownIcon className="size-4 fill-white/60" />
               </MenuButton>
-
               <MenuItems
                 transition
                 anchor="bottom end"
@@ -99,30 +99,7 @@ export default function JSONReader() {
 
       <div className="overflow-y-auto no_scrollbar flex flex-col gap-2 text-xs rounded-t rounded-ee-2xl">
         {currentItems.map((item, index) => (
-          <div
-            key={index}
-            className="p-2 bg-stone-900/10 dark:bg-stone-300/10 rounded-md flex flex-col gap-2"
-          >
-            <h2 className="text-lg font-semibold">
-              {item.master_metadata_track_name}
-            </h2>
-            <div className="flex justify-between gap-5">
-              <p>{item.master_metadata_album_album_name}</p>{" "}
-              <p>{item.master_metadata_album_artist_name}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <h2>Timestamp</h2>
-              <p>{item.ts}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <h2>Duration Streamed</h2>
-              <p>{item.ms_played / 1000}s</p>
-            </div>
-            <div className="flex gap-2">
-              <p>{item.shuffle ? "shuffled" : ""}</p>
-              <p>{item.skipped ? "skipped" : ""}</p>
-            </div>
-          </div>
+          <SongTile key={index} item={item}></SongTile>
         ))}
       </div>
     </>
