@@ -5,6 +5,7 @@ import { useImage } from "react-image";
 
 import "./App.css";
 import SidebarView from "./components/SidebarView";
+import jsonFile from "./data/Streaming_History_Audio_2014-2017_0.json";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -31,6 +32,8 @@ function App() {
     return <img alt="Spotify Logo" src={src} />;
   };
 
+  const selectedJSON = jsonFile;
+
   return (
     <>
       <div className="absolute top-10 right-10 flex gap-2 transition-all duration-1000">
@@ -44,7 +47,7 @@ function App() {
       </div>
 
       <div className="bg-stone-300 dark:bg-stone-900 py-10 h-dvh w-vw flex gap-2 items-center justify-center transition-all duration-1000">
-        <SidebarView />
+        <SidebarView selectedJSON={selectedJSON} />
         <div className="w-[50vw] flex flex-col gap-5 items-center me-5 ">
           <div className="w-full max-w-96">
             <Suspense

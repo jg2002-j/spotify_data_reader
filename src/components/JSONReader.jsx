@@ -1,28 +1,16 @@
 import { useState, useEffect } from "react";
-import {
-  Button,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  Input,
-} from "@headlessui/react";
-import {
-  ArrowLeftCircleIcon,
-  ArrowRightCircleIcon,
-  CheckCircleIcon,
-  ChevronDownIcon,
-} from "@heroicons/react/16/solid";
 
-import jsonFile from "../data/Streaming_History_Audio_2014-2017_0.json";
 import SongTile from "./SongTile";
+import Filters from "./Filters";
+import Show from "./Show";
+import Pages from "./Pages";
 
-export default function JSONReader() {
-  const firstStreamTimeStamp = jsonFile[0].ts;
+export default function JSONReader({ selectedJSON }) {
+  const firstStreamTimeStamp = selectedJSON[0].ts;
   const firstStreamDate = new Date(firstStreamTimeStamp);
   const startDate = firstStreamDate.toLocaleDateString();
 
-  const lastStreamTimeStamp = jsonFile[jsonFile.length - 1].ts;
+  const lastStreamTimeStamp = selectedJSON[selectedJSON.length - 1].ts;
   const lastStreamDate = new Date(lastStreamTimeStamp);
   const endDate = lastStreamDate.toLocaleDateString();
 
@@ -49,6 +37,7 @@ export default function JSONReader() {
     getLocalStorageValue("timeFilter", 10000)
   );
 
+  // eslint-disable-next-line no-unused-vars
   const [filters, setFilters] = useState([timeFilter]);
 
   const [totalItemsToDisplay, SetTotalItemsToDisplay] = useState([]);
@@ -110,7 +99,7 @@ export default function JSONReader() {
   // useEffect to update the total list of items to display through ALL pages
   // changes when timeFilter (or any other filters) change
   useEffect(() => {
-    const totalFilteredItems = jsonFile.filter(
+    const totalFilteredItems = selectedJSON.filter(
       (item) => item.ms_played >= timeFilter
     );
     SetTotalItemsToDisplay(totalFilteredItems);
@@ -137,97 +126,19 @@ export default function JSONReader() {
       <h2 className="text-2xl font-bold mb-3">{`${startDate} to ${endDate}`}</h2>
       <div className="flex justify-between items-center mb-5">
         <div className="flex gap-5">
-          <div className="flex gap-3 items-center text-right text-sm">
-            <h4>Filters</h4>
-            <Menu>
-              <MenuButton className="inline-flex items-center gap-2 rounded bg-stone-900/20  py-1 px-2 focus:outline-none data-[hover]:bg-stone-900/30 data-[open]:bg-stone-900/30 data-[focus]:outline-1 data-[focus]:outline-white">
-                {filters.length}
-                <ChevronDownIcon className="size-4 fill-white/60" />
-              </MenuButton>
-              <MenuItems
-                transition
-                anchor="bottom end"
-                className="w-64 text-sm origin-top-right rounded border border-white/5 bg-stone-300/90 dark:bg-stone-900/90 dark:text-stone-300 text-stone-800 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
-              >
-                <MenuItem>
-                  <button
-                    onClick={() => toggleTimeFilter()}
-                    className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
-                  >
-                    <CheckCircleIcon className="size-6" />
-                    <p>
-                      {timeFilter != 0
-                        ? `Not displaying songs that were played for ${timeFilter / 1000} seconds or less.`
-                        : `Currently displaying songs played for any duration.`}
-                    </p>
-                  </button>
-                </MenuItem>
-              </MenuItems>
-            </Menu>
-          </div>
-          <div className="flex gap-3 items-center text-right text-sm">
-            <h4>Show</h4>
-            <Menu>
-              <MenuButton className="inline-flex items-center gap-2 rounded bg-stone-900/20  py-1 px-2 focus:outline-none data-[hover]:bg-stone-900/30 data-[open]:bg-stone-900/30 data-[focus]:outline-1 data-[focus]:outline-white">
-                {loadLimit}
-                <ChevronDownIcon className="size-4 fill-white/60" />
-              </MenuButton>
-              <MenuItems
-                transition
-                anchor="bottom end"
-                className="w-16 text-sm origin-top-right rounded border border-white/5 bg-stone-300/90 dark:bg-stone-900/90 dark:text-stone-300 text-stone-800 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
-              >
-                <MenuItem>
-                  <button
-                    onClick={(e) =>
-                      setLoadLimit(JSON.parse(e.target.textContent))
-                    }
-                    className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
-                  >
-                    15
-                  </button>
-                </MenuItem>
-                <MenuItem>
-                  <button
-                    onClick={(e) =>
-                      setLoadLimit(JSON.parse(e.target.textContent))
-                    }
-                    className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
-                  >
-                    25
-                  </button>
-                </MenuItem>
-                <MenuItem>
-                  <button
-                    onClick={(e) =>
-                      setLoadLimit(JSON.parse(e.target.textContent))
-                    }
-                    className="group flex w-full items-center gap-2 rounded py-[0.125rem] px-3 data-[focus]:bg-white/10"
-                  >
-                    35
-                  </button>
-                </MenuItem>
-              </MenuItems>
-            </Menu>
-          </div>
-          <div className="flex gap-2 items-center text-sm">
-            <Button onClick={() => previousPage()} className="px-2">
-              <ArrowLeftCircleIcon
-                className={`size-5 ${currentPage == 1 ? "text-stone-400 dark:text-stone-700" : ""}`}
-              />
-            </Button>
-            <Input
-              onChange={(e) => updatePage(e.target.value)}
-              value={currentPage}
-              className="padded max-w-10"
-            ></Input>
-            <p>/ {totalPages}</p>
-            <Button onClick={() => nextPage()} className="px-2">
-              <ArrowRightCircleIcon
-                className={`size-5 ${currentPage == totalPages ? "text-stone-400 dark:text-stone-700" : ""}`}
-              />
-            </Button>
-          </div>
+          <Filters
+            filters={filters}
+            toggleTimeFilter={toggleTimeFilter}
+            timeFilter={timeFilter}
+          />
+          <Show loadLimit={loadLimit} setLoadLimit={setLoadLimit} />
+          <Pages
+            currentPage={currentPage}
+            updatePage={updatePage}
+            nextPage={nextPage}
+            previousPage={previousPage}
+            totalPages={totalPages}
+          />
         </div>
       </div>
 

@@ -5,7 +5,7 @@ export default function SongTile({ item, index }) {
   const fetch_url = `https://open.spotify.com/oembed?url=${item.spotify_track_uri}`;
 
   const AlbumCover = ({ thumbnail_url }) => {
-    const fallbackImg = "../Full_Logo_Black_RGB.svg";
+    const fallbackImg = "../Primary_Logo_Black_RGB.svg";
     const imageSrc = thumbnail_url;
     const { src } = useImage({
       srcList: [imageSrc, fallbackImg],
@@ -94,8 +94,8 @@ export default function SongTile({ item, index }) {
 
   return (
     <div className="p-5 bg-stone-900/10 dark:bg-stone-300/10 rounded-md flex items-center gap-5 group">
-      <h1 className="text-3xl">{index + 1}</h1>
-      <div className="h-24 w-24 aspect-square group-[hover]:h-32 group-[hover]:w-32 duration-300 transition-all border-2 rounded">
+      {/* <h1 className="text-3xl">{index + 1}</h1> */}
+      <div className="h-24 w-24 aspect-square group-[hover]:h-32 group-[hover]:w-32 duration-300 transition-all rounded overflow-hidden">
         <Suspense
           fallback={
             <h2 className="text-stone-600 font-extrabold">Loading...</h2>
