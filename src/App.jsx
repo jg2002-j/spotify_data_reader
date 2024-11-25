@@ -10,6 +10,7 @@ import SidebarView from "./components/SidebarView";
 function App() {
   const [count, setCount] = useState(0);
   const [darkMode, setDarkMode] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
@@ -32,9 +33,15 @@ function App() {
     return <img alt="Spotify Logo" src={src} />;
   };
 
-  const showSidebar = () => {
-    return <SidebarView />;
-  };
+  useEffect(() => {
+    if (count > 0 && showSidebar === false) {
+      setShowSidebar(true);
+    }
+  }, [count, showSidebar]);
+
+  useEffect(() => {
+    console.log(`showSidebar is ${showSidebar}`);
+  }, [showSidebar]);
 
   return (
     <>
@@ -48,8 +55,8 @@ function App() {
         </Button>
       </div>
 
-      <div className="bg-stone-300 dark:bg-stone-900 p-10 h-dvh w-vw flex gap-2 items-center justify-center">
-        {showSidebar()}
+      <div className="bg-stone-300 dark:bg-stone-900 py-10 h-dvh w-vw flex gap-2 items-center justify-center">
+        {<SidebarView width={showSidebar} />}
         <div className="w-[50vw] border-2 flex flex-col gap-5 items-center">
           <div className="w-full max-w-96">
             <Suspense
