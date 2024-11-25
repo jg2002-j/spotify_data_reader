@@ -24,8 +24,8 @@ function App() {
 
   const FullSpotifyLogo = ({ darkMode }) => {
     const imageSource = darkMode
-      ? "../Full_Logo_Green_CMYK.svg"
-      : "../Full_Logo_Black_CMYK.svg";
+      ? "../Full_Logo_Green_RGB.svg"
+      : "../Full_Logo_Black_RGB.svg";
     const { src } = useImage({
       srcList: [imageSource],
     });
@@ -63,7 +63,7 @@ function App() {
               <FullSpotifyLogo darkMode={darkMode} />
             </Suspense>
           </div>
-          <h1 className="text-3xl font-bold text-stone-800 dark:text-stone-300 select-none">
+          <h1 className="text-3xl font-bold select-none">
             Spotify JSON Reader
           </h1>
           <div className="flex gap-5 items-center">
@@ -74,6 +74,13 @@ function App() {
               count is {count}
             </Button>
           </div>
+          <p className="dark:bg-stone-300/10 bg-stone-900/10 p-3 rounded text-lg max-w-96 text-center">
+            Visit{" "}
+            <a href="https://www.spotify.com/uk/account/privacy/">
+              Spotify &gt; Account &gt; Privacy
+            </a>{" "}
+            to download a copy of your streaming data.
+          </p>
         </div>
       </div>
     </>
