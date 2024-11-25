@@ -25,7 +25,7 @@ export default function MainMenu({
   };
 
   return (
-    <div className="w-[50vw] flex flex-col gap-5 items-center me-5 ">
+    <div className="max-w-[50vw] flex flex-col gap-5 items-center me-5 border-2">
       <div className="w-full max-w-96">
         <Suspense
           fallback={
@@ -36,7 +36,7 @@ export default function MainMenu({
         </Suspense>
       </div>
       <h1 className="text-3xl font-bold select-none">Spotify JSON Reader</h1>
-      <div className="default p-5 flex flex-col gap-3 items-center">
+      <div className="w-full default p-5 flex flex-col gap-3 items-center">
         <div className="flex gap-3 items-center">
           <Button
             className="bg-stone-900/10 dark:bg-stone-300/10 size-12 flex items-center justify-center rounded-full text-stone-800 dark:text-stone-300 text-lg hover:bg-stone-900/40 dark:hover:bg-stone-300/40 group duration-150 transition-all"
@@ -60,7 +60,7 @@ export default function MainMenu({
           </Button>
         </div>
       </div>
-      <p className="dark:bg-stone-300/10 bg-stone-900/10 p-3 rounded text-sm text-balance w-fit max-w-80 text-center">
+      <p className="w-full dark:bg-stone-300/10 bg-stone-900/10 p-3 rounded text-sm text-balance max-w-80 text-center">
         Visit{" "}
         <a href="https://www.spotify.com/uk/account/privacy/">
           Spotify &gt; Account &gt; Privacy

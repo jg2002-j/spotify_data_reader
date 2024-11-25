@@ -17,4 +17,4 @@ I did use ChatGPT to refresh myself on topics, as an 'advanced' search engine, e
 | Date     | Time Started | Time Ended | Hours Spent |
 | -------- | ------------ | ---------- | ----------- |
 | 25/11/24 | 1:38 AM      | 7:12 AM    | 6           |
-| 25/11/24 | 12:05 PM     |            |
+| 25/11/24 | 12:05 PM     | 5:24 PM    | 5           |
