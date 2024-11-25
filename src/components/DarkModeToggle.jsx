@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Button } from "@headlessui/react";
-import { MoonIcon, SunIcon } from "@heroicons/react/16/solid";
+import { Moon, Sun } from "lucide-react";
 
 export default function DarkModeToggle({ darkMode, setDarkMode }) {
   useEffect(() => {
@@ -19,8 +19,8 @@ export default function DarkModeToggle({ darkMode, setDarkMode }) {
         onClick={() => setDarkMode((previous) => !previous)}
         className="cursor-pointer px-4 py-2 rounded bg-black/10 dark:bg-white/10 p-1 ring-1 ring-black/15 dark:ring-white/15 ring-inset"
       >
-        <MoonIcon className="size-4 fill-black dark:fill-white hidden dark:block" />
-        <SunIcon className="size-4 fill-black dark:fill-white block dark:hidden" />
+        <Moon className="size-4 text-black dark:text-white hidden dark:block" />
+        <Sun className="size-4 text-black dark:text-white block dark:hidden" />
       </Button>
     </div>
   );

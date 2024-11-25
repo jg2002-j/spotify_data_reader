@@ -1,5 +1,5 @@
 import { Description, Field, Input, Label, Button } from "@headlessui/react";
-import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/16/solid";
+import { Search, X } from "lucide-react";
 
 export default function SearchArtistAlbumTitle({
   searchGeneric,
@@ -12,7 +12,7 @@ export default function SearchArtistAlbumTitle({
         {searchGeneric}
       </Description>
       <div className="default flex items-center px-2 py-1 gap-2">
-        <MagnifyingGlassIcon className="size-4" />
+        <Search className="size-4" />
         <Input
           onChange={(e) => setSearchGeneric(e.target.value)}
           value={searchGeneric}
@@ -22,7 +22,7 @@ export default function SearchArtistAlbumTitle({
           onClick={() => setSearchGeneric("")}
           className="default px-1 py-[0.05rem]"
         >
-          <XMarkIcon className="size-4" />
+          <X className="size-4" />
         </Button>
       </div>
     </Field>

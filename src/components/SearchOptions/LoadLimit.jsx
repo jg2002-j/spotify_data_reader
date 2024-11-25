@@ -1,17 +1,13 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import {
-  SquaresPlusIcon,
-  CheckCircleIcon,
-  ChevronDownIcon,
-} from "@heroicons/react/16/solid";
+import { Grid2X2Plus, Check, ChevronsDown } from "lucide-react";
 
 export default function LoadLimit({ loadLimit, setLoadLimit }) {
   return (
     <Menu>
       <MenuButton className="default flex items-center px-2 py-1 gap-2 text-sm">
-        <SquaresPlusIcon className="size-3" />
+        <Grid2X2Plus className="size-3" />
         <p className="text-nowrap">{`Showing ${loadLimit} items`}</p>
-        <ChevronDownIcon className="size-4" />
+        <ChevronsDown className="size-4" />
       </MenuButton>
 
       <MenuItems
@@ -25,7 +21,7 @@ export default function LoadLimit({ loadLimit, setLoadLimit }) {
             className="group flex w-full items-center gap-3 py-2 px-3 data-[focus]:bg-white/10"
           >
             <div className="default p-1">
-              <CheckCircleIcon
+              <Check
                 className={`size-3 fill-white ${loadLimit != 10 ? "opacity-0" : ""}`}
               />
             </div>
@@ -38,7 +34,7 @@ export default function LoadLimit({ loadLimit, setLoadLimit }) {
             className="group flex w-full items-center gap-3 py-2 px-3 data-[focus]:bg-white/10"
           >
             <div className="default p-1">
-              <CheckCircleIcon
+              <Check
                 className={`size-3 fill-white ${loadLimit != 25 ? "opacity-0" : ""}`}
               />
             </div>
@@ -51,7 +47,7 @@ export default function LoadLimit({ loadLimit, setLoadLimit }) {
             className="group flex w-full items-center gap-3 py-2 px-3 data-[focus]:bg-white/10"
           >
             <div className="default p-1">
-              <CheckCircleIcon
+              <Check
                 className={`size-3 fill-white ${loadLimit != 50 ? "opacity-0" : ""}`}
               />
             </div>

@@ -1,21 +1,17 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import {
-  CheckCircleIcon,
-  ChevronDownIcon,
-  FunnelIcon,
-} from "@heroicons/react/16/solid";
+import { Check, ChevronsDown, Filter } from "lucide-react";
 
 export default function Filters({ filters, toggleSkippedFilter, timeFilter }) {
   return (
     <Menu>
       <MenuButton className="default flex items-center px-2 py-1 gap-2 text-sm">
-        <FunnelIcon className="size-3" />
+        <Filter className="size-3" />
         <p className="text-nowrap">
           {filters.length}{" "}
           {filters.length >= 2 || filters.length == 0 ? "Filters" : "Filter"}{" "}
           applied
         </p>
-        <ChevronDownIcon className="size-4" />
+        <ChevronsDown className="size-4" />
       </MenuButton>
 
       <MenuItems
@@ -29,7 +25,7 @@ export default function Filters({ filters, toggleSkippedFilter, timeFilter }) {
             className="group flex w-full items-center gap-3 py-2 px-3 data-[focus]:bg-white/10"
           >
             <div className="default p-1">
-              <CheckCircleIcon
+              <Check
                 className={`size-3 fill-white ${timeFilter == 0 ? "opacity-0" : ""}`}
               />
             </div>
