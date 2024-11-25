@@ -1,7 +1,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { useImage } from "react-image";
 
-export default function SongTile({ item, index }) {
+export default function SongTile({ item }) {
   const fetch_url = `https://open.spotify.com/oembed?url=${item.spotify_track_uri}`;
 
   const AlbumCover = ({ thumbnail_url }) => {
@@ -93,8 +93,7 @@ export default function SongTile({ item, index }) {
   };
 
   return (
-    <div className="p-5 bg-stone-900/10 dark:bg-stone-300/10 rounded-md flex items-center gap-5 group">
-      {/* <h1 className="text-3xl">{index + 1}</h1> */}
+    <div className="w-full p-5 bg-stone-900/10 dark:bg-stone-300/10 rounded-md flex items-center gap-5 group">
       <div className="h-24 w-24 aspect-square group-[hover]:h-32 group-[hover]:w-32 duration-300 transition-all rounded overflow-hidden">
         <Suspense
           fallback={

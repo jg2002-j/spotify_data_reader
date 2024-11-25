@@ -123,7 +123,7 @@ function App() {
   return (
     <>
       {/* dark/light mode toggle */}
-      <div className="absolute top-10 right-10 flex gap-2 transition-all duration-1000">
+      <div className="absolute top-10 right-10 flex gap-2 default">
         <Button
           onClick={() => setDarkMode((previous) => !previous)}
           className="cursor-pointer px-4 py-2 rounded bg-black/10 dark:bg-white/10 p-1 ring-1 ring-black/15 dark:ring-white/15 ring-inset"
@@ -153,8 +153,7 @@ function App() {
           <h1 className="text-3xl font-bold select-none">
             Spotify JSON Reader
           </h1>
-          <div className="bg-stone-900/10 dark:bg-stone-300/10 p-3 rounded flex flex-col gap-3 items-center">
-            <h2>Choose the Data to load:</h2>
+          <div className="default p-5 flex flex-col gap-3 items-center">
             <div className="flex gap-3 items-center">
               <Button
                 className="bg-stone-900/10 dark:bg-stone-300/10 size-12 flex items-center justify-center rounded-full text-stone-800 dark:text-stone-300 text-lg hover:bg-stone-900/40 dark:hover:bg-stone-300/40 group duration-150 transition-all"

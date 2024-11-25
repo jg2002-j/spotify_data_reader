@@ -1,12 +1,12 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 
-export default function Show({ loadLimit, setLoadLimit }) {
+export default function LoadLimit({ loadLimit, setLoadLimit }) {
   return (
     <div className="flex gap-3 items-center text-right text-sm">
       <h4>Show</h4>
       <Menu>
-        <MenuButton className="inline-flex items-center gap-2 rounded bg-stone-900/20  py-1 px-2 focus:outline-none data-[hover]:bg-stone-900/30 data-[open]:bg-stone-900/30 data-[focus]:outline-1 data-[focus]:outline-white">
+        <MenuButton className="padded flex gap-2">
           {loadLimit}
           <ChevronDownIcon className="size-4 fill-white/60" />
         </MenuButton>

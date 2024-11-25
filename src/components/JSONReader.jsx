@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-
+import { Button } from "@headlessui/react";
 import SongTile from "./SongTile";
-import Filters from "./Filters";
-import Show from "./Show";
-import Pages from "./Pages";
+import Pages from "./SearchOptions/Pages";
+import SearchOptions from "./SearchOptions";
 
 export default function JSONReader({ selectedJSON, dateRange }) {
   const getLocalStorageValue = (key, defaultValue) => {
@@ -19,18 +18,20 @@ export default function JSONReader({ selectedJSON, dateRange }) {
   };
 
   // useState with () => for lazy initialisation
+  const [showOptionsPanel, setShowOptionsPanel] = useState(
+    getLocalStorageValue("showOptionsPanel", false)
+  );
   const [loadLimit, setLoadLimit] = useState(() =>
     getLocalStorageValue("loadLimit", 15)
   );
   const [currentPage, setCurrentPage] = useState(() =>
     getLocalStorageValue("currentPage", 1)
   );
-  const [timeFilter, setTimeFilter] = useState(() =>
-    getLocalStorageValue("timeFilter", 10000)
+  const [filterSkippedSongs, setFilterSkippedSongs] = useState(() =>
+    getLocalStorageValue("filterSkippedSongs", true)
   );
 
-  // eslint-disable-next-line no-unused-vars
-  const [filters, setFilters] = useState([timeFilter]);
+  const [filters, setFilters] = useState([]);
 
   const [totalItemsToDisplay, SetTotalItemsToDisplay] = useState([]);
   const [currentItems, setCurrentItems] = useState([]);
@@ -40,6 +41,10 @@ export default function JSONReader({ selectedJSON, dateRange }) {
 
   // persist user options to local storage
   useEffect(() => {
+    localStorage.setItem("showOptionsPanel", JSON.stringify(showOptionsPanel));
+  }, [showOptionsPanel]);
+
+  useEffect(() => {
     localStorage.setItem("loadLimit", JSON.stringify(loadLimit));
   }, [loadLimit]);
 
@@ -48,27 +53,15 @@ export default function JSONReader({ selectedJSON, dateRange }) {
   }, [currentPage]);
 
   useEffect(() => {
-    localStorage.setItem("timeFilter", JSON.stringify(timeFilter));
-  }, [timeFilter]);
+    localStorage.setItem(
+      "filterSkippedSongs",
+      JSON.stringify(filterSkippedSongs)
+    );
+  }, [filterSkippedSongs]);
 
   // filters
-  const toggleTimeFilter = () => {
-    switch (timeFilter) {
-      case 10000:
-        setTimeFilter(20000);
-        break;
-      case 20000:
-        setTimeFilter(30000);
-        break;
-      case 30000:
-        setTimeFilter(0);
-        break;
-      case 0:
-        setTimeFilter(10000);
-        break;
-      default:
-        break;
-    }
+  const toggleSkippedFilter = () => {
+    setFilterSkippedSongs((filterSkippedSongs) => !filterSkippedSongs);
   };
 
   // page navigation functions
@@ -91,11 +84,15 @@ export default function JSONReader({ selectedJSON, dateRange }) {
   // useEffect to update the total list of items to display through ALL pages
   // changes when timeFilter (or any other filters) change
   useEffect(() => {
-    const totalFilteredItems = selectedJSON.filter(
-      (item) => item.ms_played >= timeFilter
-    );
+    const totalFilteredItems = selectedJSON.filter((item) => {
+      if (filterSkippedSongs) {
+        return item.skipped != true && item.ms_played >= 30000;
+      } else {
+        return true;
+      }
+    });
     SetTotalItemsToDisplay(totalFilteredItems);
-  }, [timeFilter, selectedJSON]);
+  }, [filterSkippedSongs, selectedJSON]);
 
   // useEffect to refresh the current list of items loaded on the CURRENT page
   // changes when startItem, loadLimit (where in the list user is positioned) or totalItemsToDisplay (total list contents) change
@@ -107,6 +104,21 @@ export default function JSONReader({ selectedJSON, dateRange }) {
     setCurrentItems(updatedItems);
   }, [totalItemsToDisplay, startItem, loadLimit]);
 
+  // update filters array state when filters are added
+  useEffect(() => {
+    if (filterSkippedSongs) {
+      if (!filters.includes("skippedSongs")) {
+        setFilters((prevFilters) => [...prevFilters, "skippedSongs"]);
+      }
+    } else {
+      if (filters.includes("skippedSongs")) {
+        setFilters((prevFilters) =>
+          prevFilters.filter((filter) => filter !== "skippedSongs")
+        );
+      }
+    }
+  }, [filterSkippedSongs, filters]);
+
   const mapJSON = () => {
     return currentItems.map((item, index) => {
       return <SongTile key={index} item={item} index={index} />;
@@ -116,26 +128,44 @@ export default function JSONReader({ selectedJSON, dateRange }) {
   return (
     <>
       <h2 className="text-2xl font-bold mb-3">{dateRange}</h2>
-      <div className="flex justify-between items-center mb-5">
-        <div className="flex gap-5">
-          <Filters
-            filters={filters}
-            toggleTimeFilter={toggleTimeFilter}
-            timeFilter={timeFilter}
-          />
-          <Show loadLimit={loadLimit} setLoadLimit={setLoadLimit} />
-          <Pages
-            currentPage={currentPage}
-            updatePage={updatePage}
-            nextPage={nextPage}
-            previousPage={previousPage}
-            totalPages={totalPages}
-          />
+      <div className="flex flex-wrap justify-between items-center gap-3 mb-5">
+        <div className="flex gap-3">
+          <Button
+            className={`default px-2 py-1 text-sm ${showOptionsPanel ? "bg-stone-900/30 dark:bg-stone-300/30 ring-1 ring-stone-900 dark:ring-stone-300" : ""}`}
+            onClick={() =>
+              setShowOptionsPanel((showOptionsPanel) => !showOptionsPanel)
+            }
+          >
+            Show options
+          </Button>
+          {showOptionsPanel && (
+            <SearchOptions
+              filters={filters}
+              toggleSkippedFilter={toggleSkippedFilter}
+              filterSkippedSongs={filterSkippedSongs}
+              loadLimit={loadLimit}
+              setLoadLimit={setLoadLimit}
+            />
+          )}
         </div>
+        <Pages
+          currentPage={currentPage}
+          updatePage={updatePage}
+          nextPage={nextPage}
+          previousPage={previousPage}
+          totalPages={totalPages}
+        />
       </div>
 
-      <div className="overflow-y-auto no_scrollbar flex flex-col gap-2 text-xs rounded-t rounded-ee-2xl">
+      <div className="overflow-y-auto no_scrollbar flex flex-col items-center gap-2 text-xs rounded-t rounded-ee-2xl">
         {mapJSON()}
+        <Pages
+          currentPage={currentPage}
+          updatePage={updatePage}
+          nextPage={nextPage}
+          previousPage={previousPage}
+          totalPages={totalPages}
+        />
       </div>
     </>
   );
