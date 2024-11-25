@@ -105,7 +105,7 @@ export default function SongTile({ item, index }) {
         </Suspense>
       </div>
       <div className="flex flex-col gap-2">
-        <h2 className="text-xl font-bold w-48 truncate text-ellipsis">
+        <h2 className="text-xl font-bold w-56 truncate text-ellipsis">
           {item.master_metadata_track_name}
         </h2>
         <div className="flex items-center gap-5">

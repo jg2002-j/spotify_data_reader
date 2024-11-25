@@ -1,6 +1,11 @@
 import { useEffect, useState, Suspense } from "react";
 import { Button } from "@headlessui/react";
-import { MoonIcon, SunIcon } from "@heroicons/react/16/solid";
+import {
+  MoonIcon,
+  SunIcon,
+  ArrowLeftCircleIcon,
+  ArrowRightCircleIcon,
+} from "@heroicons/react/16/solid";
 import { useImage } from "react-image";
 
 import "./App.css";
@@ -68,11 +73,19 @@ function App() {
     }
   }, [count, jsonFileArray]);
 
-  const switchJSON = () => {
-    if (count + 1 < jsonFileArray.length) {
-      setCount(count + 1);
+  const switchJSON = (direction) => {
+    if (direction == "+") {
+      if (count + 1 < jsonFileArray.length) {
+        setCount(count + 1);
+      } else {
+        setCount(0);
+      }
     } else {
-      setCount(0);
+      if (count - 1 >= 0) {
+        setCount(count - 1);
+      } else {
+        setCount(jsonFileArray.length - 1);
+      }
     }
   };
 
@@ -81,7 +94,18 @@ function App() {
     localStorage.setItem("count", JSON.stringify(count));
   }, [count]);
 
-  //TODO: consider not importing and storing all the jsons (important for when there are a bazillion)
+  const getJSONRange = () => {
+    if (!selectedJSON || selectedJSON.length === 0) {
+      return "Loading...";
+    } else {
+      const options = { year: "numeric", month: "short" };
+      const startDate = new Date(selectedJSON[0].ts);
+      const startReadableDate = startDate.toLocaleDateString("en-GB", options);
+      const endDate = new Date(selectedJSON[selectedJSON.length - 1].ts);
+      const endReadableDate = endDate.toLocaleDateString("en-GB", options);
+      return `${startReadableDate} to ${endReadableDate}`;
+    }
+  };
 
   return (
     <>
@@ -90,8 +114,8 @@ function App() {
           onClick={() => setDarkMode((previous) => !previous)}
           className="cursor-pointer px-4 py-2 rounded bg-black/10 dark:bg-white/10 p-1 ring-1 ring-black/15 dark:ring-white/15 ring-inset"
         >
-          <MoonIcon className="size-4 fill-black dark:fill-white block dark:hidden" />
-          <SunIcon className="size-4 fill-black dark:fill-white hidden dark:block" />
+          <MoonIcon className="size-4 fill-black dark:fill-white hidden dark:block" />
+          <SunIcon className="size-4 fill-black dark:fill-white block dark:hidden" />
         </Button>
       </div>
 
@@ -110,13 +134,31 @@ function App() {
           <h1 className="text-3xl font-bold select-none">
             Spotify JSON Reader
           </h1>
-          <div className="flex gap-5 items-center">
-            <Button
-              className="inline-flex items-center gap-2 rounded-md bg-stone-500 dark:bg-stone-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-stone-600 data-[open]:bg-stone-700 data-[focus]:outline-1 data-[focus]:outline-white"
-              onClick={() => switchJSON()}
-            >
-              count is {count}
-            </Button>
+          <div className="bg-stone-900/10 dark:bg-stone-300/10 p-3 rounded flex flex-col gap-3 items-center">
+            <h2>Choose the Data to load:</h2>
+            <div className="flex gap-3 items-center">
+              <Button
+                className="bg-stone-900/10 dark:bg-stone-300/10 size-12 flex items-center justify-center rounded-full text-stone-800 dark:text-stone-300 text-lg hover:bg-stone-900/40 dark:hover:bg-stone-300/40 group duration-150 transition-all"
+                onClick={() => switchJSON("-")}
+              >
+                <ArrowLeftCircleIcon className="size-7 group-hover:size-9 duration-150 transition-all" />{" "}
+              </Button>
+              <div className="flex flex-col gap-2 items-center">
+                <h2 className="bg-stone-900/10 dark:bg-stone-300/10 px-5 py-1 text-sm rounded text-stone-800 dark:text-stone-300">
+                  {count + 1} /{" "}
+                  {jsonFileArray.length === 0
+                    ? "Loading..."
+                    : jsonFileArray.length}
+                </h2>
+                <h1 className="text-lg font-bold">{getJSONRange()}</h1>
+              </div>
+              <Button
+                className="bg-stone-900/10 dark:bg-stone-300/10 size-12 flex items-center justify-center rounded-full text-stone-800 dark:text-stone-300 text-lg hover:bg-stone-900/40 dark:hover:bg-stone-300/40 group duration-150 transition-all"
+                onClick={() => switchJSON("+")}
+              >
+                <ArrowRightCircleIcon className="size-7 group-hover:size-9 duration-150 transition-all" />{" "}
+              </Button>
+            </div>
           </div>
           <p className="dark:bg-stone-300/10 bg-stone-900/10 p-3 rounded text-lg max-w-96 text-center">
             Visit{" "}
