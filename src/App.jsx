@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 
 import "./App.css";
-import SidebarView from "./components/SidebarView";
+import JSONPanel from "./components/JSONPanel";
 import MainMenu from "./components/MainMenu";
 import DarkModeToggle from "./components/DarkModeToggle";
+import StatsPanel from "./components/StatsPanel";
 
 const jsonFiles = import.meta.glob("./data/*.json");
 
@@ -95,14 +96,15 @@ function App() {
     <>
       <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
       <div className="noise bg-stone-300 dark:bg-stone-900 h-dvh w-vw transition-all duration-1000 flex items-center justify-center">
-        <div className="w-full max-w-[2000px] flex items-center justify-between">
+        <div className="w-full border-[1px] border-red-600 max-w-[2200px] flex items-center justify-between">
           <div className="w-[60%] flex justify-start items-center">
             {selectedJSON && (
-              <SidebarView
+              <JSONPanel
                 selectedJSON={selectedJSON}
                 dateRange={getJSONDateRange()}
               />
             )}
+            {selectedJSON && <StatsPanel selectedJSON={selectedJSON} />}
           </div>
           <MainMenu
             switchJSON={switchJSON}
