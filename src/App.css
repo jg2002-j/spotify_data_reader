@@ -26,17 +26,33 @@ h4 {
 }
 
 .noise {
-  background-image: url(../public/nnnoise.svg);
+  background-image: url(../nnnoise.svg);
 }
 
 a {
-  @apply dark:text-spotify_green text-spotify_black font-bold hover:underline transition-all duration-200;
+  @apply dark:text-spotify_green text-spotify_black font-bold hover:underline;
 }
 
 .default {
-  @apply noise bg-stone-900/10 hover:bg-stone-900/20 dark:bg-stone-300/10 dark:hover:bg-stone-300/20 text-stone-800 dark:text-stone-300 duration-300 transition-all rounded-md;
+  @apply noise bg-stone-900/10 hover:bg-stone-900/20 dark:bg-stone-300/10 dark:hover:bg-stone-300/20 text-stone-800 dark:text-stone-300 duration-300 rounded-md;
+}
+
+.default_toggled_on {
+  @apply noise bg-stone-900/30 hover:bg-stone-900/50 dark:bg-stone-300/30 dark:hover:bg-stone-300/50 text-stone-800 dark:text-stone-300 duration-300 rounded-md;
 }
 
 .default_static {
-  @apply noise bg-stone-900/10 dark:bg-stone-300/10 duration-300 text-stone-800 dark:text-stone-300 transition-all rounded-md;
+  @apply noise bg-stone-900/10 dark:bg-stone-300/10 duration-300 text-stone-800 dark:text-stone-300 rounded-md;
+}
+
+.default_bg {
+  @apply noise bg-stone-300 dark:bg-stone-900;
+}
+
+.panel {
+  @apply rounded-e-[3rem] bg-stone-900/10 dark:bg-stone-300/10  text-stone-800 dark:text-stone-300;
+}
+
+* {
+  @apply transition-all duration-1000;
 }

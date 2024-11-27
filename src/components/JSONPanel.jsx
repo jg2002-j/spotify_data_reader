@@ -1,12 +1,16 @@
 import JSONReader from "./JSONReader";
 
-function JSONPanel({ selectedJSON, dateRange }) {
+function JSONPanel({ selectedJSON, dateRange, showJSONPanel }) {
   return (
-    <div className="h-dvh noise bg-stone-900/10 dark:bg-stone-300/10 duration-300 text-stone-800 dark:text-stone-300 transition-all rounded-e-3xl max-w-[500px] flex flex-col p-5">
-      <JSONReader
-        selectedJSON={selectedJSON}
-        dateRange={dateRange}
-      ></JSONReader>
+    <div
+      className={`${showJSONPanel ? "w-[500px] hover:w-[520px]" : "w-0"} absolute top-0 left-0 z-50 h-dvh panel flex flex-col p-5 `}
+    >
+      {showJSONPanel && (
+        <JSONReader
+          selectedJSON={selectedJSON}
+          dateRange={dateRange}
+        ></JSONReader>
+      )}
     </div>
   );
 }

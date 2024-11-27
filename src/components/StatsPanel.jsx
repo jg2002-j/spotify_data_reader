@@ -1,9 +1,18 @@
 // import React from "react";
 
-export default function StatsPanel({ selectedJSON }) {
+export default function StatsPanel({
+  selectedJSON,
+  showJSONPanel,
+  showStatsPanel,
+}) {
   return (
-    <div className="h-dvh noise bg-stone-900/10 dark:bg-stone-300/10 duration-300 text-stone-800 dark:text-stone-300 transition-all rounded-e-3xl max-w-[500px] flex flex-col p-5">
-      <div className="w-full">yay</div>
+    <div
+      className={`${showJSONPanel ? "w-[1000px] hover:w-[1020px]" : "w-[500px] hover:w-[520px]"} h-dvh panel group flex`}
+    >
+      <div className={`${showJSONPanel ? "w-[500px]" : "w-10"}`}></div>
+      <div className="w-[500px] group-hover:w-[520px] flex flex-col p-5">
+        <h3>Hello</h3>
+      </div>
     </div>
   );
 }

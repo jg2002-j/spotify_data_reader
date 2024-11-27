@@ -34,6 +34,9 @@ function App() {
     getLocalStorageValue("darkMode", true)
   );
 
+  const [showJSONPanel, setShowJSONPanel] = useState(true);
+  const [showStatsPanel, setShowStatsPanel] = useState(true);
+
   // persist values to local storage
   useEffect(() => {
     localStorage.setItem("index", JSON.stringify(index));
@@ -45,12 +48,16 @@ function App() {
   // load jsonFileArray on component first render
   useEffect(() => {
     const loadFiles = async () => {
-      const jsonList = [];
-      for (const path in jsonFiles) {
-        const jsonFile = await jsonFiles[path]();
-        jsonList.push(jsonFile);
+      try {
+        const jsonList = [];
+        for (const path in jsonFiles) {
+          const jsonFile = await jsonFiles[path]();
+          jsonList.push(jsonFile);
+        }
+        setJsonFileArray(jsonList);
+      } catch (error) {
+        console.error("Error loading JSON files: ", error);
       }
-      setJsonFileArray(jsonList);
     };
     loadFiles();
   }, []);
@@ -95,16 +102,24 @@ function App() {
   return (
     <>
       <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
-      <div className="noise bg-stone-300 dark:bg-stone-900 h-dvh w-vw transition-all duration-1000 flex items-center justify-center">
-        <div className="w-full border-[1px] border-red-600 max-w-[2200px] flex items-center justify-between">
-          <div className="w-[60%] flex justify-start items-center">
+      <div className="default_bg h-dvh w-vw transition-all duration-1000 flex items-center justify-center">
+        <div className="w-full max-w-[2200px] flex items-center justify-between">
+          <div className="w-fit h-dvh flex items-center justify-start relative">
             {selectedJSON && (
               <JSONPanel
                 selectedJSON={selectedJSON}
                 dateRange={getJSONDateRange()}
+                showJSONPanel={showJSONPanel}
+                showStatsPane={showStatsPanel}
               />
             )}
-            {selectedJSON && <StatsPanel selectedJSON={selectedJSON} />}
+            {selectedJSON && (
+              <StatsPanel
+                selectedJSON={selectedJSON}
+                showJSONPanel={showJSONPanel}
+                showStatsPane={showStatsPanel}
+              />
+            )}
           </div>
           <MainMenu
             switchJSON={switchJSON}
@@ -112,6 +127,10 @@ function App() {
             index={index}
             dateRange={getJSONDateRange()}
             darkMode={darkMode}
+            showJSONPanel={showJSONPanel}
+            showStatsPanel={showStatsPanel}
+            setShowJSONPanel={setShowJSONPanel}
+            setShowStatsPanel={setShowStatsPanel}
           />
         </div>
       </div>

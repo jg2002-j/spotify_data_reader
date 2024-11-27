@@ -1,5 +1,10 @@
 import { Suspense } from "react";
-import { CircleArrowLeft, CircleArrowRight } from "lucide-react";
+import {
+  CircleArrowLeft,
+  CircleArrowRight,
+  ChartColumn,
+  TextSearch,
+} from "lucide-react";
 import { useImage } from "react-image";
 import { Button } from "@headlessui/react";
 
@@ -9,6 +14,10 @@ export default function MainMenu({
   index,
   dateRange,
   darkMode,
+  showJSONPanel,
+  setShowJSONPanel,
+  showStatsPanel,
+  setShowStatsPanel,
 }) {
   const FullSpotifyLogo = () => {
     const imageSource = darkMode
@@ -22,7 +31,7 @@ export default function MainMenu({
   };
 
   return (
-    <div className="w-[40%] flex flex-col gap-5 items-center p-10">
+    <div className="w-full flex flex-col gap-5 items-center p-10">
       <div className="w-full max-w-80">
         <Suspense
           fallback={
@@ -60,6 +69,22 @@ export default function MainMenu({
           onClick={() => switchJSON("+")}
         >
           <CircleArrowRight className="size-7 group-hover:size-9 duration-150 transition-all" />{" "}
+        </Button>
+      </div>
+      <div className="w-96 flex items-center gap-5">
+        <Button
+          onClick={() => setShowJSONPanel((previousState) => !previousState)}
+          className={`w-full hover:w-[120%] rounded-md flex items-center justify-center gap-3 p-5 ${showJSONPanel ? "default_toggled_on" : "default"}`}
+        >
+          <TextSearch className="size-4" />
+          <h2>Show Data</h2>{" "}
+        </Button>
+        <Button
+          onClick={() => setShowStatsPanel((previousState) => !previousState)}
+          className={`w-full hover:w-[120%] rounded-md flex items-center justify-center gap-3 p-5 ${showStatsPanel ? "default_toggled_on" : "default"}`}
+        >
+          <ChartColumn className="size-4" />
+          <h2>Show Stats</h2>
         </Button>
       </div>
       <p className="w-96 default_static p-3 text-sm text-balance text-center">
